@@ -1,0 +1,6 @@
+[submodule "ref/Dapper"]
+	path = ref/Dapper
+	url = git@github.com:Yang-XL/Dapper.git
+[submodule "ref/Dapper-Extensions"]
+	path = ref/Dapper-Extensions
+	url = git@github.com:Yang-XL/Dapper-Extensions.git

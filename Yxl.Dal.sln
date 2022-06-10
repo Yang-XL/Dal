@@ -1,0 +1,29 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.2.32526.322
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Yxl.Dal", "src\Yxl.Dal\Yxl.Dal.csproj", "{FF9D924E-3A86-4269-A23E-BFC310041505}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{E7B37011-5A67-44D2-95E0-201FAF2B3A25}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ref", "ref", "{912CA2D6-0178-4CB3-84F7-E5D299EF2F19}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{FF9D924E-3A86-4269-A23E-BFC310041505}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FF9D924E-3A86-4269-A23E-BFC310041505}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FF9D924E-3A86-4269-A23E-BFC310041505}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FF9D924E-3A86-4269-A23E-BFC310041505}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {CEF7100A-1DAB-4E6D-94CA-96E3B8FC2FE4}
+	EndGlobalSection
+EndGlobal
