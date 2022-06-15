@@ -2,20 +2,23 @@
 using System.Data;
 using System.Data.Common;
 using System.Threading.Tasks;
+using Yxl.Dal.Options;
 
 namespace Yxl.Dal.Context
 {
-    public abstract class DbContext : IDbContext, IDisposable, IAsyncDisposable
+    public abstract class DbContext : IDbContext
     {
-        private readonly DbConnection _dbConnection;
+        private IConnectionWrapper connectionWrapper;
 
-        public DbContext(DbConnection dbConnection)
+
+        protected DbContext(ReadWriteConnectionOptions dbOptions)
         {
-            _dbConnection = dbConnection;
+            this.connectionWrapper = dbOptions.Wrapper;
         }
 
         public virtual async Task<IDbConnection> OpenWriteAsync()
         {
+            var _dbConnection = connectionWrapper.GetWriteDbConnection();
             if (_dbConnection.State != ConnectionState.Open && _dbConnection.State != ConnectionState.Connecting)
                 await _dbConnection.OpenAsync();
             return _dbConnection;
@@ -24,6 +27,7 @@ namespace Yxl.Dal.Context
 
         public virtual IDbConnection OpenWrite()
         {
+            var _dbConnection = connectionWrapper.GetWriteDbConnection();
             if (_dbConnection.State != ConnectionState.Open && _dbConnection.State != ConnectionState.Connecting)
                 _dbConnection.Open();
             return _dbConnection;
@@ -31,35 +35,38 @@ namespace Yxl.Dal.Context
 
         public virtual async Task<IDbConnection> OpenReadAsync()
         {
-            return await OpenWriteAsync();
+            var _dbConnection = connectionWrapper.GetReadDbConnection();
+            if (_dbConnection.State != ConnectionState.Open && _dbConnection.State != ConnectionState.Connecting)
+                await _dbConnection.OpenAsync();
+            return _dbConnection;
         }
 
         public virtual IDbConnection OpenRead()
         {
-            return OpenWrite();
+            var _dbConnection = connectionWrapper.GetReadDbConnection();
+            if (_dbConnection.State != ConnectionState.Open && _dbConnection.State != ConnectionState.Connecting)
+                _dbConnection.Open();
+            return _dbConnection;
         }
 
-        public void Dispose()
+        public IDbTransaction BeginTransaction()
         {
-            if (_dbConnection != null)
-            {
-                if (_dbConnection.State != ConnectionState.Closed)
-                {
-                    _dbConnection.Close();
-                }
-            }
+            opre
         }
 
-        public async ValueTask DisposeAsync()
+        public Task<IDbTransaction> BeginTransactionAsync()
         {
-            if (_dbConnection != null)
-            {
-                if (_dbConnection.State != ConnectionState.Closed)
-                {
-                    await _dbConnection.CloseAsync();
-                }
-                await _dbConnection.DisposeAsync();
-            }
+            throw new NotImplementedException();
+        }
+
+        public Task<IDbConnection> OpenConnectionAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+        public IDbConnection OpenConnection()
+        {
+            throw new NotImplementedException();
         }
     }
 }

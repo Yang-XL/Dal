@@ -1,19 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Text;
+﻿using System.Data;
+using System.Data.Common;
 using System.Threading.Tasks;
 
 namespace Yxl.Dal.Context
 {
+    /// <summary>
+    /// 提供读写 分离链接维护
+    /// </summary>
+
     public interface IDbContext
     {
-        Task<IDbConnection> OpenWriteAsync();
+        IDbTransaction BeginTransaction();
 
-        IDbConnection OpenWrite();
+        Task<IDbTransaction> BeginTransactionAsync();
 
-        Task<IDbConnection> OpenReadAsync();
+        Task<IDbConnection> OpenConnectionAsync();
 
-        IDbConnection OpenRead();
+        IDbConnection OpenConnection();
     }
+
+
+
 }

@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
@@ -6,10 +6,15 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Repository\" />
-    <Folder Include="UnitWork\" />
+    <Folder Include="Common\Enum\" />
     <Folder Include="Cache\" />
-    <Folder Include="Common\Util\" />
+    <Folder Include="DI\" />
+    <Folder Include="DapperMap\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\ref\Dapper\Dapper\Dapper.csproj" />
+    <ProjectReference Include="..\..\Yxl.Dapper.Extensions\Yxl.Dapper.Extensions.csproj" />
   </ItemGroup>
 
 </Project>

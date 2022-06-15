@@ -1,0 +1,13 @@
+D:\workspace\GitHub-Yxl\Dal\Yxl.Dapper.Extensions\obj\Debug\netstandard2.1\Yxl.Dapper.Extensions.csproj.AssemblyReference.cache
+D:\workspace\GitHub-Yxl\Dal\Yxl.Dapper.Extensions\obj\Debug\netstandard2.1\Yxl.Dapper.Extensions.GeneratedMSBuildEditorConfig.editorconfig
+D:\workspace\GitHub-Yxl\Dal\Yxl.Dapper.Extensions\obj\Debug\netstandard2.1\Yxl.Dapper.Extensions.AssemblyInfoInputs.cache
+D:\workspace\GitHub-Yxl\Dal\Yxl.Dapper.Extensions\obj\Debug\netstandard2.1\Yxl.Dapper.Extensions.AssemblyInfo.cs
+D:\workspace\GitHub-Yxl\Dal\Yxl.Dapper.Extensions\obj\Debug\netstandard2.1\Yxl.Dapper.Extensions.csproj.CoreCompileInputs.cache
+D:\workspace\GitHub-Yxl\Dal\Yxl.Dapper.Extensions\bin\Debug\netstandard2.1\Yxl.Dapper.Extensions.deps.json
+D:\workspace\GitHub-Yxl\Dal\Yxl.Dapper.Extensions\bin\Debug\netstandard2.1\Yxl.Dapper.Extensions.dll
+D:\workspace\GitHub-Yxl\Dal\Yxl.Dapper.Extensions\bin\Debug\netstandard2.1\Yxl.Dapper.Extensions.pdb
+D:\workspace\GitHub-Yxl\Dal\Yxl.Dapper.Extensions\bin\Debug\netstandard2.1\Dapper.dll
+D:\workspace\GitHub-Yxl\Dal\Yxl.Dapper.Extensions\bin\Debug\netstandard2.1\Dapper.xml
+D:\workspace\GitHub-Yxl\Dal\Yxl.Dapper.Extensions\obj\Debug\netstandard2.1\Yxl.Dapper.Extensions.csproj.CopyComplete
+D:\workspace\GitHub-Yxl\Dal\Yxl.Dapper.Extensions\obj\Debug\netstandard2.1\Yxl.Dapper.Extensions.dll
+D:\workspace\GitHub-Yxl\Dal\Yxl.Dapper.Extensions\obj\Debug\netstandard2.1\Yxl.Dapper.Extensions.pdb
