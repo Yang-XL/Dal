@@ -7,7 +7,7 @@ namespace Yxl.Dapper.Extensions.Metadata
     {
         /// <summary>
         /// 函数列
-        ///  例如Top(1),NOW()
+        ///  例如Top(1),NOW();
         /// </summary>
         bool FunctionColumn { get; set; }
 
@@ -58,7 +58,6 @@ namespace Yxl.Dapper.Extensions.Metadata
         /// 租户ID列
         /// </summary>
         bool TenantId { get; set; }
-
 
         /// <summary>
         /// 所属表

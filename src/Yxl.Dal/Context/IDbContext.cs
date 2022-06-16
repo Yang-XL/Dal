@@ -21,23 +21,7 @@ namespace Yxl.Dal.Context
         /// </summary>
         /// <returns></returns>
         Task<DbTransaction> BeginTransactionAsync();
-        /// <summary>
-        /// 
-        /// </summary>
-        void Commit();
-        /// <summary>
-        /// 
-        /// </summary>
-        void CommitAsync();
-        /// <summary>
-        /// 
-        /// </summary>
-        void RollBack();
-        /// <summary>
-        /// 
-        /// </summary>
-        void RoolBackAsync();
-
+               
         /// <summary>
         /// 打开链接
         /// </summary>

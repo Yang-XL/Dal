@@ -31,17 +31,24 @@ namespace Yxl.Dapper.Extensions
         {
             throw new NotImplementedException();
         }
-
-        public SqlQueryBuilder<T> Select(params string[] filedName)
+        /// <summary>
+        /// 纯字符串列
+        /// </summary>
+        /// <param name="columnName">如： "create_at,id,name"</param>
+        /// <returns></returns>
+        public SqlQueryBuilder<T> Select(params string[] columnName)
         {
-            _selectFiled.AddRange(filedName?.Where(a => !string.IsNullOrWhiteSpace(a)).Select(a => new Filed { Name = a, Table = _table }));
+            _selectFiled.AddRange(columnName?.Where(a => !string.IsNullOrWhiteSpace(a)).Select(a => new Filed { Name = a, Table = _table }));
             return this;
         }
-
-
-        public SqlQueryBuilder<T> Select(Expression<Func<T, object>> filedName)
+        /// <summary>
+        /// Lamba 支持
+        /// </summary>
+        /// <param name="columnName"> 如 x=>new {x.id,x.name,}</param>
+        /// <returns></returns>
+        public SqlQueryBuilder<T> Select(Expression<Func<T, object>> columnName)
         {
-            var members = ExpressionHelper.GetMemberInfo(filedName);
+            var members = ExpressionHelper.GetMemberInfo(columnName);
             foreach (var item in members.Where(a => a.MemberType == MemberTypes.Property))
             {
                 if (item.MemberType == MemberTypes.Property && item is PropertyInfo p)
@@ -53,15 +60,26 @@ namespace Yxl.Dapper.Extensions
             }
             return this;
         }
-
-
+        /// <summary>
+        /// 原始封装 一般用于函数列
+        /// </summary>
+        /// <param name="filds">如 new Filed("NOW();")</param>
+        /// <returns></returns>
+        public SqlQueryBuilder<T> Select(params IFiled[] filds)
+        {
+            _selectFiled.AddRange(filds);
+            return this;
+        }
+        /// <summary>
+        /// SqlWhere
+        /// </summary>
+        /// <param name="where"></param>
+        /// <returns></returns>
         public SqlQueryBuilder<T> Where(Action<SqlWhereBuilder<T>> where)
         {
             where(sqlWhereBuilder);
             return this;
         }
-
-
 
     }
 
