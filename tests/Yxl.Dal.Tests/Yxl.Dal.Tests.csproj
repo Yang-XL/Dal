@@ -22,7 +22,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <ProjectReference Include="..\..\ref\Dapper\Dapper\Dapper.csproj" />
 	  <ProjectReference Include="..\..\src\Yxl.Dal\Yxl.Dal.csproj" />
+	  <ProjectReference Include="..\..\src\Yxl.Dapper.Extensions\Yxl.Dapper.Extensions.csproj" />
 	</ItemGroup>
 
 	<ProjectExtensions><VisualStudio><UserProperties appsettings_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>

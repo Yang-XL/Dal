@@ -11,7 +11,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\ref\Dapper\Dapper\Dapper.csproj" />
-    <ProjectReference Include="..\..\Yxl.Dapper.Extensions\Yxl.Dapper.Extensions.csproj" />
     <ProjectReference Include="..\Yxl.Dapper.Extensions\Yxl.Dapper.Extensions.csproj" />
   </ItemGroup>
 
