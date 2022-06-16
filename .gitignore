@@ -19,3 +19,4 @@
 /src/Yxl.Dal.SqlServer/obj
 /tests/Yxl.Dal.Tests/bin
 /tests/Yxl.Dal.Tests/obj
+/TestResults
