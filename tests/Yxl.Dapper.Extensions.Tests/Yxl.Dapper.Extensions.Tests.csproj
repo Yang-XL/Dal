@@ -16,6 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\src\Yxl.Dapper.Extensions\Yxl.Dapper.Extensions.csproj" />
     <ProjectReference Include="..\..\Yxl.Dapper.Extensions\Yxl.Dapper.Extensions.csproj" />
   </ItemGroup>
 

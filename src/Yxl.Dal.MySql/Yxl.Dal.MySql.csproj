@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Yxl.Dal\Yxl.Dal.csproj" />
+    <ProjectReference Include="..\Yxl.Dapper.Extensions\Yxl.Dapper.Extensions.csproj" />
   </ItemGroup>
 
 </Project>

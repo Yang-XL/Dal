@@ -1,10 +1,6 @@
 ﻿using Dapper;
 using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Data;
-using System.Data.Common;
-using System.Text;
 using System.Threading.Tasks;
 using Yxl.Dal.Aggregate;
 using Yxl.Dal.Options;
@@ -22,11 +18,11 @@ namespace Yxl.Dal.UnitWork
         {
             this.options = options;
         }
+        public UnitWork() : this(DbOptionStore.GetOptions(string.Empty))
+        {
+        }
 
         public bool Commited { get; protected set; }
-
-
-        public Func<DbOptions, DbConnection> OpenConnection { get; set; }
 
         public bool Commit()
         {
@@ -107,6 +103,12 @@ namespace Yxl.Dal.UnitWork
             _store.Push(new SqlUpdateBuilder<T>().UpdateById(entity));
         }
 
+    }
 
+    public class UnitWork<T> : UnitWork where T : IEntity
+    {
+        public UnitWork() : base(DbOptionStore.GetOptions<T>())
+        {
+        }
     }
 }

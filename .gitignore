@@ -20,3 +20,7 @@
 /tests/Yxl.Dal.Tests/bin
 /tests/Yxl.Dal.Tests/obj
 /TestResults
+/example/Yxl.Dal.Api/bin/
+/example/Yxl.Dal.Api/obj/
+/src/Yxl.Dapper.Extensions/bin/
+/src/Yxl.Dapper.Extensions/obj/
