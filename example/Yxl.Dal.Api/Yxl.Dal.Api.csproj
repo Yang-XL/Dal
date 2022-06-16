@@ -10,4 +10,11 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\ref\Dapper\Dapper\Dapper.csproj" />
+    <ProjectReference Include="..\..\src\Yxl.Dal.MySql\Yxl.Dal.MySql.csproj" />
+    <ProjectReference Include="..\..\src\Yxl.Dal\Yxl.Dal.csproj" />
+    <ProjectReference Include="..\..\src\Yxl.Dapper.Extensions\Yxl.Dapper.Extensions.csproj" />
+  </ItemGroup>
+
 </Project>
