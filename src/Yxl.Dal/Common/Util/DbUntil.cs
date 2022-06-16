@@ -10,7 +10,7 @@ namespace Yxl.Dal.Common.Util
     {
         public static string? GetDbName<T>()
         {
-            return typeof(T).GetCustomAttribute<DBAttribute>(false)?.Name;
+            return typeof(T).GetCustomAttribute<DBAttribute>(false)?.Name ?? string.Empty;
         }
     }
 }

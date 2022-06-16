@@ -1,22 +1,16 @@
-﻿using DapperExtensions;
-using DapperExtensions.Sql;
+﻿
 using Microsoft.Extensions.DependencyInjection;
-using System.Collections.Generic;
-using Yxl.Dal.Context;
-using Yxl.Dal.Options;
+using System;
 
 namespace Yxl.Dal.MySql
 {
     public static class DI
     {
-
-        public static IServiceCollection AddMysqlDal(this IServiceCollection services, IEnumerable<ReadWriteConnectionOptions> options)
+        public static IServiceCollection AddMysqlDal(this IServiceCollection services, Action<MySqlOptionsProvider> options)
         {
-            services.AddSingleton(options);
-            services.AddSingleton<ISqlGenerator, SqlGeneratorImpl>();
-            services.AddSingleton<IDapperImplementor, DapperImplementor>();
-
-            services.AddTransient<IDbContext, DbContext>();
+            MySqlOptionsProvider p = new MySqlOptionsProvider();
+            options(p);
+            p.Build();
             return services;
         }
     }

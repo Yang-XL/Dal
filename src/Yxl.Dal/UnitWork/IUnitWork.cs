@@ -1,20 +1,27 @@
-﻿namespace Yxl.Dal.UnitWork
+﻿using System.Threading.Tasks;
+using Yxl.Dal.Aggregate;
+using Yxl.Dapper.Extensions;
+
+namespace Yxl.Dal.UnitWork
 {
     public interface IUnitWork
     {
-        void RegistAdd<T>(T entity);
+        void RegistAdd<T>(T entity) where T : IEntity;
 
-        void RegistDelete<T>(T entity);
+        void RegistDeleteById<T>(T entity) where T : IEntity;
 
-        void RegistUpdate<T>(T entity);
+        void RegistUpdateByID<T>(T entity) where T : IEntity;
+
+        void RegistDelete<T>(SqlDeleteBuilder<T> builder) where T : IEntity;
+
+        void RegistUpdate<T>(SqlUpdateBuilder<T> builder) where T : IEntity;
+
 
         bool Commit();
 
-        bool Committed { get; }
+        Task<bool> CommitAsync();
 
-        /// <summary>
-        /// 回滚当前的Unit Of Work事务。
-        /// </summary>
-        void Rollback();
+        bool Commited { get; }
+
     }
 }

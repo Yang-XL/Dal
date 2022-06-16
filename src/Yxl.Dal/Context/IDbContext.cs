@@ -14,11 +14,19 @@ namespace Yxl.Dal.Context
 
         Task<IDbTransaction> BeginTransactionAsync();
 
-        Task<IDbConnection> OpenConnectionAsync();
+        Task<DbConnection> OpenWriteAsync();
 
-        IDbConnection OpenConnection();
+        DbConnection OpenWrite();
+
+        Task<DbConnection> OpenReadAsync();
+
+        DbConnection OpenRead();
     }
 
+    public interface IDbContext<T> : IDbContext
+    {
+
+    }
 
 
 }

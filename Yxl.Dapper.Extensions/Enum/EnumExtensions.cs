@@ -26,9 +26,9 @@ namespace Yxl.Dapper.Extensions.Enum
             switch (value)
             {
                 case GroupOperator.Or:
-                    return "OR";
+                    return " OR ";
                 case GroupOperator.And:
-                    return "AND";
+                    return " AND ";
                 default:
                     throw new NotSupportedException("not support operator");
             }
@@ -39,9 +39,9 @@ namespace Yxl.Dapper.Extensions.Enum
             switch (value)
             {
                 case SortDirection.ASC:
-                    return "ASC";
+                    return " ASC ";
                 case SortDirection.DESC:
-                    return "DESC";
+                    return " DESC ";
                 default:
                     throw new NotSupportedException("not support operator");
             }

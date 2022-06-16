@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Dapper;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Yxl.Dapper.Extensions
@@ -60,6 +61,19 @@ namespace Yxl.Dapper.Extensions
             if (string.IsNullOrWhiteSpace(sql)) return this;
             Sql = $"{Sql} {sql}";
             return this;
+        }
+
+        public DynamicParameters GetDynamicParameters()
+        {
+            DynamicParameters dynamicParameters = new DynamicParameters();
+            foreach (var p in Parameters)
+            {
+                dynamicParameters.Add(p.Name, p.Value, p.DbType,
+                                      p.ParameterDirection, p.Size, p.Precision,
+                                      p.Scale);
+
+            }
+            return dynamicParameters;
         }
     }
 

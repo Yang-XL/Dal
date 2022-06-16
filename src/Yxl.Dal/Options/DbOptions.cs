@@ -1,13 +1,26 @@
 ﻿using System;
+using System.Data.Common;
+using Yxl.Dapper.Extensions.Enum;
+using Yxl.Dapper.Extensions.SqlDialect;
 
 namespace Yxl.Dal.Options
 {
     public class DbOptions
     {
         /// <summary>
-        /// 链接ID
+        /// 数据库名
         /// </summary>
-        public string ConnectionId { get; } = Guid.NewGuid().ToString("N");
+        public string Name { get; set; } = string.Empty;
+        /// <summary>
+        /// 
+        /// 数据库类型
+        /// </summary>
+        public SqlProvider SqlProvider { get; set; } = SqlProvider.MYSQL;
+
+
+        public Func<DbConnection> CreateDbConnection { get; set; }
+
+        public ISqlDialect SqlDialect { get; set; }
 
         /// <summary>
         /// 链接字符串
@@ -15,19 +28,5 @@ namespace Yxl.Dal.Options
         public string ConnectionString { get; set; } = string.Empty;
     }
 
-    public class ReadDbOptions : DbOptions
-    {
-        /// <summary>
-        /// 权重
-        /// </summary>
-        public int Weight { get; set; }
-        /// <summary>
-        /// 当前权重
-        /// </summary>
-        internal int CurrentWeight { get; set; }
-        /// <summary>
-        /// 有效权重        /// 
-        /// </summary>
-        internal int EffectiveWeight { get; set; }
-    }
+
 }
