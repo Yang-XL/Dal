@@ -79,30 +79,33 @@ namespace Yxl.Dal.UnitWork
 
         public void RegistAdd<T>(T entity) where T : IEntity
         {
-
-            throw new NotImplementedException();
+            Regist(new SqlInsertBuilder<T>(entity));
         }
 
         public void RegistDelete<T>(SqlDeleteBuilder<T> builder) where T : IEntity
         {
-            _store.Push(builder);
+            Regist(builder);
         }
 
         public void RegistDeleteById<T>(T entity) where T : IEntity
         {
-            _store.Push(new SqlDeleteBuilder<T>().DeleteById(entity));
+            Regist(new SqlDeleteBuilder<T>().DeleteById(entity));
         }
 
         public void RegistUpdate<T>(SqlUpdateBuilder<T> builder) where T : IEntity
         {
-            _store.Push(builder);
+            Regist(builder);
         }
 
         public void RegistUpdateByID<T>(T entity) where T : IEntity
         {
-            _store.Push(new SqlUpdateBuilder<T>().UpdateById(entity));
+            Regist(new SqlUpdateBuilder<T>().UpdateById(entity));
         }
 
+        public void Regist(ISqlBuilder sqlBuilder)
+        {
+            _store.Push(sqlBuilder);
+        }
     }
 
     public class UnitWork<T> : UnitWork where T : IEntity

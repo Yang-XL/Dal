@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Yxl.Dapper.Extensions.Core;
 using Yxl.Dapper.Extensions.SqlDialect;
 
 namespace Yxl.Dapper.Extensions

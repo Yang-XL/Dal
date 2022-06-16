@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Yxl.Dapper.Extensions
+namespace Yxl.Dapper.Extensions.Core
 {
     public class SqlInfo
     {

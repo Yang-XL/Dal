@@ -10,7 +10,7 @@ namespace Yxl.Dapper.Extensions.Enum
         /// </summary>
         Update,
         /// <summary>
-        /// 插入忽略
+        /// 插入忽略 如自增主键
         /// </summary>
         Insert,
         /// <summary>

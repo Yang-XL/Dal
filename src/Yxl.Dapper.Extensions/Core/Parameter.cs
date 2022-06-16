@@ -1,6 +1,6 @@
 ﻿using System.Data;
 
-namespace Yxl.Dapper.Extensions
+namespace Yxl.Dapper.Extensions.Core
 {
     /// <summary>
     /// 参考 DapperExtensions

@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Linq;
+using Yxl.Dapper.Extensions.Core;
 
 namespace Yxl.Dapper.Extensions
 {

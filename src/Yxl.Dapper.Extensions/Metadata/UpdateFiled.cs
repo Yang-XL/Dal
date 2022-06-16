@@ -1,4 +1,5 @@
-﻿using Yxl.Dapper.Extensions.SqlDialect;
+﻿using Yxl.Dapper.Extensions.Core;
+using Yxl.Dapper.Extensions.SqlDialect;
 
 namespace Yxl.Dapper.Extensions.Metadata
 {

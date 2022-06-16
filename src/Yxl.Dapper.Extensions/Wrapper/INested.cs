@@ -1,6 +1,7 @@
 ﻿using Yxl.Dapper.Extensions.SqlDialect;
 using Yxl.Dapper.Extensions.SqlWhere;
 using System;
+using Yxl.Dapper.Extensions.Core;
 
 namespace Yxl.Dapper.Extensions.Wrapper
 {

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
+using Yxl.Dapper.Extensions.Core;
 using Yxl.Dapper.Extensions.Metadata;
 using Yxl.Dapper.Extensions.SqlDialect;
 using Yxl.Dapper.Extensions.Uitls;

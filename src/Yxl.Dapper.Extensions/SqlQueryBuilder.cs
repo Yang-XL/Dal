@@ -6,6 +6,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Collections.Generic;
 using Yxl.Dapper.Extensions.SqlDialect;
+using Yxl.Dapper.Extensions.Core;
 
 namespace Yxl.Dapper.Extensions
 {

@@ -2,6 +2,7 @@
 using Yxl.Dapper.Extensions.Metadata;
 using Yxl.Dapper.Extensions.SqlDialect;
 using System.Collections.Generic;
+using Yxl.Dapper.Extensions.Core;
 
 namespace Yxl.Dapper.Extensions.SqlWhere.Impl
 {
