@@ -14,3 +14,8 @@
 /tests/Yxl.Dal.Tests/obj/*
 /tests/Yxl.Dapper.Extensions.Tests/bin/*
 /tests/Yxl.Dapper.Extensions.Tests/obj/*
+/src/Yxl.Dal/obj
+/src/Yxl.Dal.MySql/obj
+/src/Yxl.Dal.SqlServer/obj
+/tests/Yxl.Dal.Tests/bin
+/tests/Yxl.Dal.Tests/obj
