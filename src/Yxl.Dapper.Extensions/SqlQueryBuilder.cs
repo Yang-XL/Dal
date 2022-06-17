@@ -7,6 +7,7 @@ using System.Reflection;
 using System.Collections.Generic;
 using Yxl.Dapper.Extensions.SqlDialect;
 using Yxl.Dapper.Extensions.Core;
+using Yxl.Dapper.Extensions.Enum;
 
 namespace Yxl.Dapper.Extensions
 {
@@ -14,22 +15,41 @@ namespace Yxl.Dapper.Extensions
     public class SqlQueryBuilder<T> : ISqlBuilder
     {
         private readonly ITable _table;
-        private readonly SqlWhereBuilder<T> sqlWhereBuilder;
+        private readonly SqlWhereBuilder<T> _sqlWhereBuilder;
         private readonly List<IFiled> _selectFiled;
-        private readonly List<IFiled> _orderByFiled;
+        private readonly List<IFiled> _groupBy;
+        private readonly SortedSet<SortInfo> _orderByFiled;
 
 
         public SqlQueryBuilder()
         {
             _table = typeof(T).CreateTable();
-            sqlWhereBuilder = new SqlWhereBuilder<T>();
+            _sqlWhereBuilder = new SqlWhereBuilder<T>();
             _selectFiled = new List<IFiled> { };
-            _orderByFiled = new List<IFiled> { };
+            _groupBy = new List<IFiled> { };
+            _orderByFiled = new SortedSet<SortInfo>();
         }
 
         public SqlInfo GetSql(ISqlDialect sqlDialect)
         {
-            throw new NotImplementedException();
+            var sqlInfo = new SqlInfo();
+            sqlInfo.Append("SELECT ");
+            sqlInfo.Append(!_selectFiled.Any() ? "*" : _selectFiled.GetSqlSelect(sqlDialect).ToString());
+            sqlInfo.Append($" FROM {_table.GetTableName(sqlDialect)}");
+            var sqlWhere = _sqlWhereBuilder.GetSqlWhere(sqlDialect);
+            if (!string.IsNullOrWhiteSpace(sqlWhere.Sql))
+            {
+                sqlInfo.Append($" WHERE {sqlWhere.Sql}");
+                sqlInfo.AddParameter(sqlWhere.Parameters);
+            }
+            sqlInfo.Append(!_groupBy.Any() ? "" : $" GROUP BY {_groupBy.GetSqlSelect(sqlDialect)}");
+            foreach (var item in _orderByFiled)
+            {
+                sqlInfo.Append(item.ToSql(sqlDialect));
+            }
+            return sqlInfo;
+
+
         }
         /// <summary>
         /// 纯字符串列
@@ -70,6 +90,47 @@ namespace Yxl.Dapper.Extensions
             _selectFiled.AddRange(filds);
             return this;
         }
+
+        public SqlQueryBuilder<T> OrderBy(Expression<Func<T, object>> columnName, SortDirection sort)
+        {
+            var members = ExpressionHelper.GetMemberInfo(columnName);
+            var filedList = new List<IFiled>();
+            foreach (var item in members.Where(a => a.MemberType == MemberTypes.Property))
+            {
+                if (item.MemberType == MemberTypes.Property && item is PropertyInfo p)
+                {
+                    var filed = p.CreateFiled(typeof(T));
+                    if (filed.IgnoreSelect) { continue; }
+                    filedList.Add(filed);
+                }
+            }
+            _orderByFiled.Add(new SortInfo(filedList, sort));
+            return this;
+        }
+        public SqlQueryBuilder<T> OrderByAsc(Expression<Func<T, object>> columnName)
+        {
+            return OrderBy(columnName, SortDirection.ASC);
+        }
+        public SqlQueryBuilder<T> OrderByDesc(Expression<Func<T, object>> columnName)
+        {
+            return OrderBy(columnName, SortDirection.DESC);
+        }
+
+        public SqlQueryBuilder<T> GroupBy(Expression<Func<T, object>> columnName)
+        {
+            var members = ExpressionHelper.GetMemberInfo(columnName);
+            foreach (var item in members.Where(a => a.MemberType == MemberTypes.Property))
+            {
+                if (item.MemberType == MemberTypes.Property && item is PropertyInfo p)
+                {
+                    var filed = p.CreateFiled(typeof(T));
+                    if (filed.IgnoreSelect) { continue; }
+                    _groupBy.Add(filed);
+                }
+            }
+            return this;
+        }
+
         /// <summary>
         /// SqlWhere
         /// </summary>
@@ -77,7 +138,7 @@ namespace Yxl.Dapper.Extensions
         /// <returns></returns>
         public SqlQueryBuilder<T> Where(Action<SqlWhereBuilder<T>> where)
         {
-            where(sqlWhereBuilder);
+            where(_sqlWhereBuilder);
             return this;
         }
 
