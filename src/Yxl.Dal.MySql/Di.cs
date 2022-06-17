@@ -1,6 +1,7 @@
 ﻿
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using Yxl.Dapper.Extensions.DI;
 
 namespace Yxl.Dal.MySql
 {
@@ -11,6 +12,7 @@ namespace Yxl.Dal.MySql
             MySqlOptionsProvider p = new MySqlOptionsProvider();
             options(p);
             p.Build();
+            services.AddYxlDapperExtensions();
             return services;
         }
     }

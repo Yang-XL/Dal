@@ -1,15 +1,14 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Text;
+using Yxl.Dapper.Extensions.Dapper;
 
 namespace Yxl.Dapper.Extensions.DI
 {
     public static class Di
     {
 
-        public static IServiceCollection AddMysqlDal(this IServiceCollection services)
+        public static IServiceCollection AddYxlDapperExtensions(this IServiceCollection services)
         {
+            DapperExtenstion.UseDapper();
             return services;
         }
     }

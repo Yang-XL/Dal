@@ -20,6 +20,7 @@ namespace Yxl.Dal.Options
 
         public Func<DbConnection> CreateDbConnection { get; set; }
 
+
         public ISqlDialect SqlDialect { get; set; }
 
         /// <summary>
