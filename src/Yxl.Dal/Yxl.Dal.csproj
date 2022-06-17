@@ -5,11 +5,7 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
-  <ItemGroup>
-    <Compile Remove="Cache\**" />
-    <EmbeddedResource Remove="Cache\**" />
-    <None Remove="Cache\**" />
-  </ItemGroup>
+
 
   <ItemGroup>
     <ProjectReference Include="..\..\ref\Dapper\Dapper\Dapper.csproj" />
