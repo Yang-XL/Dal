@@ -1,10 +1,15 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using Yxl.Dapper.Extensions.Attributes;
 using Yxl.Dapper.Extensions.Enum;
 using IgnoreAttribute = Yxl.Dapper.Extensions.Attributes.IgnoreAttribute;
 
-namespace Yxl.Dapper.Extensions.Tests.Mock.Entity
+namespace Yxl.Dal.Tests.Mock.Entity
 {
     [Table("user")]
     public class UserEntity

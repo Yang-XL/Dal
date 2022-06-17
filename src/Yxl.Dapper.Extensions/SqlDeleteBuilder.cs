@@ -15,6 +15,8 @@ namespace Yxl.Dapper.Extensions
         private readonly bool logicalDelete;
         private readonly SqlUpdateBuilder<T> sqlUpdateBuilder;
         private readonly ITable table;
+
+
         public SqlDeleteBuilder()
         {
             table = typeof(T).CreateTable();
@@ -26,6 +28,10 @@ namespace Yxl.Dapper.Extensions
         }
         public SqlDeleteBuilder<T> Where(Action<SqlWhereBuilder<T>> where)
         {
+            if (logicalDelete)
+            {
+                sqlUpdateBuilder.LogicalDelete(where);
+            }
             where(sqlWhereBuilder);
             return this;
         }
@@ -49,13 +55,13 @@ namespace Yxl.Dapper.Extensions
         }
 
         public SqlDeleteBuilder<T> DeleteById(T entity)
-        {
-            var allFiles = typeof(T).CreateFiles();
-            if (allFiles.Any(a => a.LogicalDelete))
+        {           
+            if (logicalDelete)
             {
-                var update = (new SqlUpdateBuilder<T>()).LogicalDeleteById(entity);
+                sqlUpdateBuilder.LogicalDeleteById(entity);
                 return this;
             }
+            var allFiles = typeof(T).CreateFiles();
             foreach (var item in allFiles.Where(a => a.Key))
             {
                 sqlWhereBuilder.Eq(item, item.MetaData.GetValue(entity));

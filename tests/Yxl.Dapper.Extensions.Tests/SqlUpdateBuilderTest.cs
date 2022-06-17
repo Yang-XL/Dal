@@ -41,7 +41,7 @@ namespace Yxl.Dapper.Extensions.Tests
         {
             UserEntity user = new UserEntity()
             {
-                Id = "01",
+                Id = 1,
                 CreateAt =DateTime.Now,
                 UpdateAt = DateTime.Now,
                 FirstName ="王",

@@ -11,7 +11,7 @@ namespace Yxl.Dapper.Extensions
 {
 
 
-    public class SqlUpdateBuilder<T>:ISqlBuilder
+    public class SqlUpdateBuilder<T> : ISqlBuilder
     {
         private readonly List<IUpdateFiled> _updateFiled;
         private readonly SqlWhereBuilder<T> sqlWhereBuilder;
@@ -78,10 +78,27 @@ namespace Yxl.Dapper.Extensions
             sqlWhereBuilder.And(where);
             return this;
         }
+
+
+
         internal SqlUpdateBuilder<T> LogicalDeleteById(T entity)
         {
 
+            if (entity == null) throw new ArgumentNullException("Entity Model Is Null");
+            foreach (var item in typeof(T).CreateFiles())
+            {
+                if (item.IgnoreUpdate) continue;
+                if (item.Key)
+                {
+                    sqlWhereBuilder.Eq(item, item.MetaData.GetValue(entity));
+                    continue;
+                }
+                if (item.LogicalDelete)
+                {
+                    _updateFiled.Add(new UpdateFiled(item, false));
+                }
 
+            }
             return this;
         }
     }
