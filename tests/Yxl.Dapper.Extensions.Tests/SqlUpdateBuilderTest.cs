@@ -13,7 +13,7 @@ namespace Yxl.Dapper.Extensions.Tests
     {
         private readonly ISqlDialect sqlDialect = new MySqlDialect();
         [TestMethod]
-        public void One()
+        public void UpdateByWhereTest()
         {
             SqlUpdateBuilder<UserEntity> builder = new();
             builder.Set(a => a.LastName, "王五");
@@ -25,7 +25,7 @@ namespace Yxl.Dapper.Extensions.Tests
         }
 
         [TestMethod]
-        public void NoWhere()
+        public void UpdateNoWhereTest()
         {
             SqlUpdateBuilder<UserEntity> builder = new();
             builder.Set(a => a.LastName, "王五").Set(a => a.Id, 0);
@@ -37,7 +37,7 @@ namespace Yxl.Dapper.Extensions.Tests
         }
 
         [TestMethod]
-        public void Byid()
+        public void UpdateByIdTest()
         {
             UserEntity user = new UserEntity()
             {
