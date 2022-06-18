@@ -21,12 +21,21 @@ namespace Yxl.Dapper.Extensions
 
         public SqlInfo GetSql(ISqlDialect sqlDialect)
         {
-
             var sql = "INSERT INTO {0} ({1}) VALUES ({2})";
             Dictionary<IFiled, object> insertDic = new Dictionary<IFiled, object>();
+            IList<IFiled> keyFiled = new List<IFiled>();
             foreach (var item in typeof(T).CreateFiles())
             {
-                if (item.IgnoreInsert || item.FunctionColumn || item.UpdatedAt) continue;
+                if (item.FunctionColumn || item.UpdatedAt) continue;
+                if (item.IgnoreInsert)
+                {
+                    if (item.Key)
+                    {
+                        keyFiled.Add(item);
+                    }
+                    continue;
+                }
+               
                 if (item.CreateAt)
                 {
                     insertDic.Add(item, DateTime.Now);
@@ -38,6 +47,8 @@ namespace Yxl.Dapper.Extensions
                  string.Join(",", insertDic.Keys.Select(a => a.Name)),
                  string.Join(",", insertDic.Keys.Select(a => a.GetParameterName(sqlDialect))));
             var param = insertDic.Select(a => new Parameter(a.Key.GetParameterName(sqlDialect), a.Value));
+            //RETURNING ID INTO V_ID;
+
             return new SqlInfo(sql, param);
         }
     }

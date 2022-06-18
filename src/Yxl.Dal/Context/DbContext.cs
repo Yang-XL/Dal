@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Yxl.Dal.Aggregate;
 using Yxl.Dal.Options;
+using Yxl.Dapper.Extensions.SqlDialect;
 
 namespace Yxl.Dal.Context
 {
@@ -14,6 +15,7 @@ namespace Yxl.Dal.Context
     /// </summary>
     public class DbContext : IDbContext
     {
+        protected readonly ISqlDialect _sqlDialect;
         /// <summary>
         ///     DB Connection for internal use
         /// </summary>
@@ -21,9 +23,10 @@ namespace Yxl.Dal.Context
 
         public DbContext(DbOptions dbOptions)
         {
+            _sqlDialect = dbOptions.SqlDialect;
             InnerConnection = dbOptions.CreateDbConnection();
         }
-      
+
         public DbTransaction BeginTransaction()
         {
             return InnerConnection.BeginTransaction();
@@ -61,7 +64,7 @@ namespace Yxl.Dal.Context
         }
     }
 
-    internal class DbContext<T> : DbContext where T : IEntity
+    public class DbContext<T> : DbContext where T : IEntity
     {
         public DbContext() : base(DbOptionStore.GetOptions<T>())
         {

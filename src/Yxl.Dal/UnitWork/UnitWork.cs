@@ -1,6 +1,8 @@
 ﻿using Dapper;
 using System;
 using System.Collections.Concurrent;
+using System.Data;
+using System.Data.Common;
 using System.Threading.Tasks;
 using Yxl.Dal.Aggregate;
 using Yxl.Dal.Options;
@@ -8,15 +10,16 @@ using Yxl.Dapper.Extensions;
 
 namespace Yxl.Dal.UnitWork
 {
-    public class UnitWork : IUnitWork
+    public class UnitWork : IUnitWork, IDisposable
     {
         private readonly ConcurrentStack<ISqlBuilder> _store = new ConcurrentStack<ISqlBuilder>();
 
-        private readonly DbOptions options;
-
+        protected readonly DbConnection InnerConnection;
+        protected readonly DbOptions options;
         public UnitWork(DbOptions options)
         {
             this.options = options;
+            InnerConnection = options.CreateDbConnection();
         }
         public UnitWork() : this(DbOptionStore.GetOptions(string.Empty))
         {
@@ -24,55 +27,61 @@ namespace Yxl.Dal.UnitWork
 
         public bool Commited { get; protected set; }
 
+        protected virtual void OpenConnection()
+        {
+            if (InnerConnection.State != ConnectionState.Open && InnerConnection.State != ConnectionState.Connecting)
+                InnerConnection.Open();
+        }
+        protected virtual async Task OpenConnectionAsync()
+        {
+            if (InnerConnection.State != ConnectionState.Open && InnerConnection.State != ConnectionState.Connecting)
+                await InnerConnection.OpenAsync();
+        }
+
         public bool Commit()
         {
-            using (var conneciont = options.CreateDbConnection())
+            OpenConnection();
+            using (var tran = InnerConnection.BeginTransaction())
             {
-                conneciont.Open();
-                using (var tran = conneciont.BeginTransaction())
+                try
                 {
-                    try
+                    foreach (var item in _store)
                     {
-                        foreach (var item in _store)
-                        {
-                            var sql = item.GetSql(options.SqlDialect);
-                            conneciont.Execute(sql.Sql, sql.GetDynamicParameters(), tran);
-                        }
-                        Commited = true;
+                        var sql = item.GetSql(options.SqlDialect);
+                        InnerConnection.Execute(sql.Sql, sql.GetDynamicParameters(), tran);
                     }
-                    catch (Exception ex)
-                    {
-                        tran.Rollback();
-                    }
-
+                    Commited = true;
+                    tran.Commit();
                 }
+                catch (Exception ex)
+                {
+                    tran.Rollback();
+                }
+
             }
             return Commited;
         }
 
         public async Task<bool> CommitAsync()
         {
-            using (var conneciont = options.CreateDbConnection())
+            await OpenConnectionAsync();
+            using (var tran = await InnerConnection.BeginTransactionAsync())
             {
-                await conneciont.OpenAsync();
-                using (var tran = conneciont.BeginTransaction())
+                try
                 {
-                    try
+                    foreach (var item in _store)
                     {
-                        foreach (var item in _store)
-                        {
-                            var sql = item.GetSql(null);
-                            //TODO:
-                            await conneciont.ExecuteAsync(sql.Sql, sql.GetDynamicParameters(), tran);
-                        }
-                        await tran.CommitAsync();
-                        Commited = true;
+                        var sql = item.GetSql(options.SqlDialect);
+                        await InnerConnection.ExecuteAsync(sql.Sql, sql.GetDynamicParameters(), tran);
                     }
-                    catch (Exception)
-                    {
-                        await tran.RollbackAsync();
-                    }
+                    Commited = true;
+                    await tran.CommitAsync();
                 }
+                catch (Exception ex)
+                {
+                    await tran.RollbackAsync();
+                }
+
             }
             return Commited;
         }
@@ -105,6 +114,18 @@ namespace Yxl.Dal.UnitWork
         public void Regist(ISqlBuilder sqlBuilder)
         {
             _store.Push(sqlBuilder);
+        }
+
+        public void Dispose()
+        {
+            if (InnerConnection != null)
+            {
+                if (InnerConnection.State != ConnectionState.Closed)
+                {
+                    InnerConnection.Close();
+                }
+                InnerConnection.Dispose();
+            }
         }
     }
 
