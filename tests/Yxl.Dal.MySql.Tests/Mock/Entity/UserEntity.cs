@@ -1,18 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Yxl.Dal.MySql.Tests.Mock.Entity
 {
     [Table("user")]
     public class UserEntity
     {
-        
+        [Key, Dapper.Extensions.Attributes.Ignore(Dapper.Extensions.Enum.IgnoreEnum.Insert)]
         public long Id { get; set; }
 
+        [Column("login_name")]
+        public string LoginName { get; set; }
+
+        [Column("pwd")]
+        public string Password { get; set; }
+
+        [Column("name")]
         public string Name { get; set; }
     }
 }

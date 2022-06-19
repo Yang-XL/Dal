@@ -1,33 +1,19 @@
-using DapperExtensions;
-using DapperExtensions.Mapper;
-using DapperExtensions.Sql;
-using MySql.Data.MySqlClient;
-using System.Reflection;
-using Yxl.Dal.MySql.Tests.Mock.Entity;
-
 namespace Yxl.Dal.MySql.Tests
 {
     [TestClass]
-    public class UnitTest1
+    public class RespositoryTest
     {
         [TestMethod]
-        public void TestMethod1()
+        public void Insert()
         {
-            var d = new UserEntity()
-            {
-                Name = "уе"
-            };
-            DapperExtensions.DapperExtensions.Configure(new DapperExtensionsConfiguration(typeof(AutoClassMapper<>), new List<Assembly>(), new MySqlDialect()));
-            using (var con = new MySqlConnection("Server=localhost;Database=dapperTest;Uid=root;Pwd=test;"))
-            {
-                con.Open();
 
-                con.Insert(d);
+        }
+        [TestMethod]
+        public async Task InsertAsync()
+        {
 
-                con.Close();
 
-            }
-            Console.WriteLine(d.Id);
+
         }
     }
 }

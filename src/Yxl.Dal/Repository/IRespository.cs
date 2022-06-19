@@ -13,17 +13,12 @@ namespace Yxl.Dal.Repository
 
         Task<T> InsertAsync(T model);
 
-
-
         int UpdateById(T model);
         Task<int> UpdateByIdAsync(T model);
 
         int Update(Action<SqlUpdateBuilder<T>> update);
 
         Task<int> UpdateAsync(Action<SqlUpdateBuilder<T>> update);
-
-
-
 
         int Delete(Action<SqlWhereBuilder<T>> where);
 
@@ -32,9 +27,6 @@ namespace Yxl.Dal.Repository
         int DeleteById(object id);
 
         Task<int> DeleteByIdAsync(object id);
-
-
-
 
         T GetById(object id);
 
