@@ -15,23 +15,23 @@ namespace Yxl.Dal.Repository
 
 
 
-        T Update(T model);
-        Task<T> UpdateAsync(T model);
+        int UpdateById(T model);
+        Task<int> UpdateByIdAsync(T model);
 
-        T Update(Action<SqlUpdateBuilder<T>> update);
+        int Update(Action<SqlUpdateBuilder<T>> update);
 
-        Task<T> UpdateAsync(Action<SqlUpdateBuilder<T>> update);
-
-            
+        Task<int> UpdateAsync(Action<SqlUpdateBuilder<T>> update);
 
 
-        bool Delete(Action<SqlWhereBuilder<T>> where);
 
-        Task<bool> DeleteAsync(Action<SqlWhereBuilder<T>> where);
 
-        bool DeleteById(object id);
+        int Delete(Action<SqlWhereBuilder<T>> where);
 
-        Task<bool> DeleteByIdAsync(object id);
+        Task<int> DeleteAsync(Action<SqlWhereBuilder<T>> where);
+
+        int DeleteById(object id);
+
+        Task<int> DeleteByIdAsync(object id);
 
 
 
@@ -44,8 +44,8 @@ namespace Yxl.Dal.Repository
 
         IEnumerable<T> Query(Action<SqlWhereBuilder<T>> where);
 
-        Task<IEnumerable<T>> QueryAsync(Action<SqlQueryBuilder<T>> where);
+        Task<IEnumerable<T>> QueryAsync(Action<SqlQueryBuilder<T>> query);
 
-        IEnumerable<T> Query(Action<SqlQueryBuilder<T>> where);
+        IEnumerable<T> Query(Action<SqlQueryBuilder<T>> query);
     }
 }

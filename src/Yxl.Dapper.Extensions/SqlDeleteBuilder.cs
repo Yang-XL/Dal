@@ -55,7 +55,7 @@ namespace Yxl.Dapper.Extensions
         }
 
         public SqlDeleteBuilder<T> DeleteById(T entity)
-        {           
+        {
             if (logicalDelete)
             {
                 sqlUpdateBuilder.LogicalDeleteById(entity);
@@ -65,6 +65,20 @@ namespace Yxl.Dapper.Extensions
             foreach (var item in allFiles.Where(a => a.Key))
             {
                 sqlWhereBuilder.Eq(item, item.MetaData.GetValue(entity));
+            }
+            return this;
+        }
+        public SqlDeleteBuilder<T> DeleteById(object id)
+        {
+            if (logicalDelete)
+            {
+                sqlUpdateBuilder.LogicalDeleteById(id);
+                return this;
+            }
+            var allFiles = typeof(T).CreateFiles();
+            foreach (var item in allFiles.Where(a => a.Key))
+            {
+                sqlWhereBuilder.Eq(item, id);
             }
             return this;
         }

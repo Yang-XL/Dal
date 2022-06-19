@@ -101,5 +101,23 @@ namespace Yxl.Dapper.Extensions
             }
             return this;
         }
+        internal SqlUpdateBuilder<T> LogicalDeleteById(object id)
+        {
+            foreach (var item in typeof(T).CreateFiles())
+            {
+                if (item.IgnoreUpdate) continue;
+                if (item.Key)
+                {
+                    sqlWhereBuilder.Eq(item, id);
+                    continue;
+                }
+                if (item.LogicalDelete)
+                {
+                    _updateFiled.Add(new UpdateFiled(item, false));
+                }
+
+            }
+            return this;
+        }
     }
 }

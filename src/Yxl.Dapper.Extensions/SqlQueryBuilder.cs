@@ -142,6 +142,25 @@ namespace Yxl.Dapper.Extensions
             return this;
         }
 
+        /// <summary>
+        /// 根据Id 查找
+        /// </summary>
+        /// <param name="sqlDialect"></param>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public SqlInfo QueryById(ISqlDialect sqlDialect, object id)
+        {
+            var files = typeof(T).CreateFiles();
+
+            foreach (var item in files)
+            {
+                if (item.Key)
+                {
+                    _sqlWhereBuilder.Eq(item, id);
+                }
+            }
+            return this.GetSql(sqlDialect);
+        }
     }
 
 
