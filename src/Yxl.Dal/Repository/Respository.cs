@@ -23,9 +23,15 @@ namespace Yxl.Dal.Repository
 
         public T Insert(T model)
         {
-            var sqlInfo = new SqlInsertBuilder<T>(model).GetSql(_sqlDialect);
+            var sqlBuilder = new SqlInsertBuilder<T>(model);
+            var sqlInfo = sqlBuilder.GetSql(_sqlDialect);
             using (var connection = OpenConnection())
             {
+                if (sqlBuilder.IsQuery)
+                {
+                    var identity = connection.Query<object>(sqlInfo.Sql, sqlInfo.GetDynamicParameters());
+                    return sqlBuilder.GetModesResutOfIdentity(identity);
+                }
                 connection.Execute(sqlInfo.Sql, sqlInfo.GetDynamicParameters());
             }
             return model;

@@ -3,6 +3,9 @@ using System.Collections.Generic;
 
 namespace Yxl.Dapper.Extensions.SqlDialect
 {
+    /// <summary>
+    /// 参考 Dapper-Extensions
+    /// </summary>
     public interface ISqlDialect
     {
         /// <summary>
@@ -15,16 +18,25 @@ namespace Yxl.Dapper.Extensions.SqlDialect
         /// </summary>
         char CloseQuote { get; }
         /// <summary>
-        /// 批量执行分割符号 mysql；
+        /// 批量执行分割符号 mysql： “；”
         /// </summary>
         string BatchSeperator { get; }
-
+        /// <summary>
+        /// 多语句执行
+        /// </summary>
         bool SupportsMultipleStatements { get; }
+        /// <summary>
+        /// 
+        /// 支持子查询 统计
+        /// </summary>
         bool SupportsCountOfSubquery { get; }
         /// <summary>
         /// 参数前缀 @
         /// </summary>
         char ParameterPrefix { get; }
+        /// <summary>
+        /// 空表达式
+        /// </summary>
         string EmptyExpression { get; }
         /// <summary>
         /// 获取表名

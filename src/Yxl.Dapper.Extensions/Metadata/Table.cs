@@ -29,6 +29,7 @@ namespace Yxl.Dapper.Extensions.Metadata
         /// <param name="sqlDialect"></param>
         /// <returns></returns>
         string GetTableAlias(ISqlDialect sqlDialect);
+
     }
     public class Table : ITable
     {
@@ -54,6 +55,7 @@ namespace Yxl.Dapper.Extensions.Metadata
         /// 别名
         /// </summary>
         public string Alias { get; set; }
+
 
         public string GetTableName(ISqlDialect sqlDialect)
         {

@@ -12,7 +12,7 @@ namespace Yxl.Dal.MySql
             MySqlOptionsProvider p = new MySqlOptionsProvider();
             options(p);
             p.Build();
-            Serv
+            
             return services;
         }
     }
