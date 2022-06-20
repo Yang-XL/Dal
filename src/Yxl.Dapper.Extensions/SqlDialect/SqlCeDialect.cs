@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Yxl.Dapper.Extensions.Enum;
 
 namespace Yxl.Dapper.Extensions.SqlDialect
 {
@@ -23,6 +24,8 @@ namespace Yxl.Dapper.Extensions.SqlDialect
         }
 
         public override bool SupportsCountOfSubquery => false;
+
+        public override SqlProvider SqlProvider => SqlProvider.SQLCE;
 
         public override string GetTableName(string schemaName, string tableName, string alias)
         {

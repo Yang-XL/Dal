@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics.CodeAnalysis;
 using System.Text.RegularExpressions;
+using Yxl.Dapper.Extensions.Enum;
 
 namespace Yxl.Dapper.Extensions.SqlDialect
 {
@@ -19,6 +20,8 @@ namespace Yxl.Dapper.Extensions.SqlDialect
         {
             get { return '`'; }
         }
+
+        public override SqlProvider SqlProvider => SqlProvider.MYSQL;
 
         public override string GetIdentitySql(string tableName,string identityName)
         {

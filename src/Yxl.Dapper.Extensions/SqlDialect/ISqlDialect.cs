@@ -1,5 +1,6 @@
 ﻿using Yxl.Dapper.Extensions.SqlDialect;
 using System.Collections.Generic;
+using Yxl.Dapper.Extensions.Enum;
 
 namespace Yxl.Dapper.Extensions.SqlDialect
 {
@@ -8,6 +9,8 @@ namespace Yxl.Dapper.Extensions.SqlDialect
     /// </summary>
     public interface ISqlDialect
     {
+        SqlProvider SqlProvider { get; }
+
         /// <summary>
         ///  如 SQLServer中的 [
         /// </summary>
@@ -66,7 +69,7 @@ namespace Yxl.Dapper.Extensions.SqlDialect
         /// </summary>
         /// <param name="tableName"></param>
         /// <returns></returns>
-        string GetIdentitySql(string tableName,string identityName);
+        string GetIdentitySql(string tableName, string identityName);
         /// <summary>
         /// 生成分页完整Sql
         /// </summary>

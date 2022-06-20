@@ -2,6 +2,7 @@
 using System;
 using System.Data.Common;
 using Yxl.Dal.Options;
+using Yxl.Dapper.Extensions.SqlDialect;
 
 namespace Yxl.Dal.MySql
 {
@@ -15,7 +16,7 @@ namespace Yxl.Dal.MySql
         public void UserMysql(string name, string connectionString)
         {
             base.Config(() => new MySqlConnection(connectionString));
-            base.Config(name, connectionString, Dapper.Extensions.Enum.SqlProvider.MYSQL);
+            base.Config(name, connectionString, Dapper.Extensions.Enum.SqlProvider.MYSQL,new MySqlDialect());
         }       
 
         /// <summary>

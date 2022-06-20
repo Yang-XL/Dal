@@ -16,6 +16,13 @@ namespace Yxl.Dal.Options
         {
             options = new DbOptions();
         }
+        protected virtual void Config(string name, string connectionString, SqlProvider sqlProvider, ISqlDialect sqlDialect)
+        {
+            options.SqlProvider = sqlProvider;
+            options.ConnectionString = connectionString;
+            options.Name = name;
+            options.SqlDialect = sqlDialect;
+        }
 
         protected virtual void Config(string name, string connectionString, SqlProvider sqlProvider)
         {

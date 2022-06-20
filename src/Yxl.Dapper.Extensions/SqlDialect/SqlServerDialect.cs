@@ -1,6 +1,7 @@
 ﻿using Yxl.Dapper.Extensions.SqlDialect;
 using System;
 using System.Collections.Generic;
+using Yxl.Dapper.Extensions.Enum;
 
 namespace Yxl.Dapper.Extensions.SqlDialect
 {
@@ -15,6 +16,8 @@ namespace Yxl.Dapper.Extensions.SqlDialect
         {
             get { return ']'; }
         }
+
+        public override SqlProvider SqlProvider => SqlProvider.SQLCE;
 
         public override string GetIdentitySql(string tableName, string identityName)
         {

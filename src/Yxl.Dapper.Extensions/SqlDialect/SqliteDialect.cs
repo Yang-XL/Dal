@@ -5,11 +5,14 @@ using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics.CodeAnalysis;
 using System.Text;
+using Yxl.Dapper.Extensions.Enum;
 
 namespace Yxl.Dapper.Extensions.SqlDialect
 {
     public class SqliteDialect : SqlDialectBase
     {
+        public override SqlProvider SqlProvider => SqlProvider.SQLLITE;
+
         public override string GetIdentitySql(string tableName, string identityName)
         {
             return $"SELECT LAST_INSERT_ROWID() AS [{identityName}]";

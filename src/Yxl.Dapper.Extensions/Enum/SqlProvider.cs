@@ -8,6 +8,9 @@ namespace Yxl.Dapper.Extensions.Enum
     {
 
         MYSQL,
-        MSSQLSERVER
+        MSSQLSERVER,
+        POSTGRESQL,
+        SQLCE,
+        SQLLITE
     }
 }

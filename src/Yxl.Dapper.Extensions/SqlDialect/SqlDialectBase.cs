@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Yxl.Dapper.Extensions.Enum;
 
 namespace Yxl.Dapper.Extensions.SqlDialect
 {
@@ -50,6 +51,8 @@ namespace Yxl.Dapper.Extensions.SqlDialect
         }
 
         public virtual bool SupportsCountOfSubquery => true;
+
+        public abstract SqlProvider SqlProvider { get; }
 
         public virtual string GetTableName(string schemaName, string tableName, string alias)
         {
