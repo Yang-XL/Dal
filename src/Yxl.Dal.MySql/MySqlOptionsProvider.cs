@@ -1,5 +1,6 @@
 ﻿using MySql.Data.MySqlClient;
 using System;
+using System.Data.Common;
 using Yxl.Dal.Options;
 
 namespace Yxl.Dal.MySql
@@ -15,7 +16,8 @@ namespace Yxl.Dal.MySql
         {
             base.Config(() => new MySqlConnection(connectionString));
             base.Config(name, connectionString, Dapper.Extensions.Enum.SqlProvider.MYSQL);
-        }
+        }       
+
         /// <summary>
         /// 当您的项目只有一个数据的时候使用
         /// </summary>

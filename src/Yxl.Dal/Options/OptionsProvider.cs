@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data.Common;
 using System.Text;
 using Yxl.Dapper.Extensions.Enum;
+using Yxl.Dapper.Extensions.SqlDialect;
 
 namespace Yxl.Dal.Options
 {
@@ -21,7 +22,18 @@ namespace Yxl.Dal.Options
             options.SqlProvider = sqlProvider;
             options.ConnectionString = connectionString;
             options.Name = name;
-
+            switch (sqlProvider)
+            {
+                case SqlProvider.MYSQL:
+                    options.SqlDialect = new MySqlDialect();
+                    break;
+                case SqlProvider.MSSQLSERVER:
+                    options.SqlDialect = new SqlServerDialect();
+                    break;
+                default:
+                    options.SqlDialect = new MySqlDialect();
+                    break;
+            }
         }
 
         protected virtual void Config(Func<DbConnection> dbConnection)

@@ -118,7 +118,7 @@ namespace Yxl.Dapper.Extensions.SqlDialect
             return (((page <= 0 ? 1 : page) - 1) * resultsPerPage);
         }
 
-        public abstract string GetIdentitySql(string tableName);
+        public abstract string GetIdentitySql(string tableName, string identityName);
         public abstract string GetPagingSql(string sql, int page, int resultsPerPage, IDictionary<string, object> parameters);
 
         public abstract string AppendLimitSql(string sql, int firstResult, int maxResults, IDictionary<string, object> parameters);

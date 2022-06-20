@@ -66,7 +66,7 @@ namespace Yxl.Dapper.Extensions.SqlDialect
         /// </summary>
         /// <param name="tableName"></param>
         /// <returns></returns>
-        string GetIdentitySql(string tableName);
+        string GetIdentitySql(string tableName,string identityName);
         /// <summary>
         /// 生成分页完整Sql
         /// </summary>

@@ -1,6 +1,3 @@
 [submodule "ref/Dapper"]
 	path = ref/Dapper
-	url = git@github.com:Yang-XL/Dapper.git
-[submodule "ref/SqlGenerator"]
-	path = ref/SqlGenerator
-	url = git@github.com:Yang-XL/SqlGenerator.git
+	url = https://github.com/Yang-XL/Dapper.git

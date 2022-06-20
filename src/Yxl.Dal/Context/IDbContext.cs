@@ -2,6 +2,7 @@
 using System.Data;
 using System.Data.Common;
 using System.Threading.Tasks;
+using Yxl.Dal.Aggregate;
 
 namespace Yxl.Dal.Context
 {
@@ -34,4 +35,8 @@ namespace Yxl.Dal.Context
         DbConnection OpenConnection();
     }
 
+    public interface IDbContext<T> : IDbContext where T : IEntity
+    {
+
+    }
 }

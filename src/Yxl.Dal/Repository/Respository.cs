@@ -29,7 +29,7 @@ namespace Yxl.Dal.Repository
             {
                 if (sqlBuilder.IsQuery)
                 {
-                    var identity = connection.Query<object>(sqlInfo.Sql, sqlInfo.GetDynamicParameters());
+                    var identity = connection.QueryFirst<object>(sqlInfo.Sql, sqlInfo.GetDynamicParameters());
                     return sqlBuilder.GetModesResutOfIdentity(identity);
                 }
                 connection.Execute(sqlInfo.Sql, sqlInfo.GetDynamicParameters());
@@ -45,7 +45,7 @@ namespace Yxl.Dal.Repository
             {
                 if (sqlBuilder.IsQuery)
                 {
-                    var identity = await connection.QueryAsync<object>(sqlInfo.Sql, sqlInfo.GetDynamicParameters());
+                    var identity = await connection.QueryFirstAsync<object>(sqlInfo.Sql, sqlInfo.GetDynamicParameters());
                     return sqlBuilder.GetModesResutOfIdentity(identity);
                 }
                 await connection.ExecuteAsync(sqlInfo.Sql, sqlInfo.GetDynamicParameters());

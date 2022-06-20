@@ -7,9 +7,9 @@ namespace Yxl.Dapper.Extensions.SqlDialect
 {
     public class PostgreSqlDialect : SqlDialectBase
     {
-        public override string GetIdentitySql(string tableName)
+        public override string GetIdentitySql(string tableName, string identityName)
         {
-            return "SELECT LASTVAL() AS Id";
+            return $"SELECT LASTVAL() AS {identityName}";
         }
 
         public override string GetPagingSql(string sql, int page, int resultsPerPage, IDictionary<string, object> parameters)

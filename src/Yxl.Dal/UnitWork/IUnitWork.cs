@@ -14,31 +14,31 @@ namespace Yxl.Dal.UnitWork
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="entity"></param>
-        void RegistAdd<T>(T entity) where T : IEntity;
+        bool RegistAdd<T>(T entity) where T : IEntity;
         /// <summary>
         /// 注册删除
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="entity"></param>
-        void RegistDeleteById<T>(T entity) where T : IEntity;
+        bool RegistDeleteById<T>(object id) where T : IEntity;
         /// <summary>
         /// 注册更新
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="entity"></param>
-        void RegistUpdateByID<T>(T entity) where T : IEntity;
+        bool RegistUpdateByID<T>(T entity) where T : IEntity;
         /// <summary>
         /// 
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="builder"></param>
-        void RegistDelete<T>(SqlDeleteBuilder<T> builder) where T : IEntity;
+        bool RegistDelete<T>(SqlDeleteBuilder<T> builder) where T : IEntity;
         /// <summary>
         /// 
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="builder"></param>
-        void RegistUpdate<T>(SqlUpdateBuilder<T> builder) where T : IEntity;
+        bool RegistUpdate<T>(SqlUpdateBuilder<T> builder) where T : IEntity;
 
         /// <summary>
         /// 提交事务

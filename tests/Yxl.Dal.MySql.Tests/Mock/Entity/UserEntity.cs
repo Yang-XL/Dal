@@ -1,10 +1,12 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Yxl.Dal.Aggregate;
+using Yxl.Dapper.Extensions.Attributes;
 
 namespace Yxl.Dal.MySql.Tests.Mock.Entity
 {
     [Table("user")]
-    public class UserEntity
+    public class UserEntity : IEntity
     {
         [Key, Dapper.Extensions.Attributes.Ignore(Dapper.Extensions.Enum.IgnoreEnum.Insert)]
         public long Id { get; set; }
@@ -17,5 +19,11 @@ namespace Yxl.Dal.MySql.Tests.Mock.Entity
 
         [Column("name")]
         public string Name { get; set; }
+
+        [Column("create_at"),CreateAt]
+        public DateTime Created { get; set; }
+
+        [Column("update_at"),UpdatedAt]
+        public DateTime Updated { get; set; }
     }
 }

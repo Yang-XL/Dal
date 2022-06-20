@@ -49,9 +49,9 @@ namespace Yxl.Dapper.Extensions.SqlDialect
             return result.ToString();
         }
 
-        public override string GetIdentitySql(string tableName)
+        public override string GetIdentitySql(string tableName, string identityName)
         {
-            return "SELECT CAST(@@IDENTITY AS BIGINT) AS [Id]";
+            return $"SELECT CAST(@@IDENTITY AS BIGINT) AS [{identityName}]";
         }
 
         public override string GetPagingSql(string sql, int page, int resultsPerPage, IDictionary<string, object> parameters)

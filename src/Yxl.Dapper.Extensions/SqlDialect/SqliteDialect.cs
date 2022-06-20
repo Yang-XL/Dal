@@ -10,9 +10,9 @@ namespace Yxl.Dapper.Extensions.SqlDialect
 {
     public class SqliteDialect : SqlDialectBase
     {
-        public override string GetIdentitySql(string tableName)
+        public override string GetIdentitySql(string tableName, string identityName)
         {
-            return "SELECT LAST_INSERT_ROWID() AS [Id]";
+            return $"SELECT LAST_INSERT_ROWID() AS [{identityName}]";
         }
 
         public override string GetPagingSql(string sql, int page, int resultsPerPage, IDictionary<string, object> parameters)

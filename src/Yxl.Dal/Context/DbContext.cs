@@ -64,7 +64,7 @@ namespace Yxl.Dal.Context
         }
     }
 
-    public class DbContext<T> : DbContext where T : IEntity
+    public class DbContext<T> : DbContext, IDbContext<T> where T : IEntity
     {
         public DbContext() : base(DbOptionStore.GetOptions<T>())
         {

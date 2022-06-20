@@ -69,10 +69,17 @@ namespace Yxl.Dal.UnitWork
             {
                 try
                 {
-                    foreach (var item in _store)
+                    while (!_store.IsEmpty)
                     {
-                        var sql = item.GetSql(options.SqlDialect);
-                        await InnerConnection.ExecuteAsync(sql.Sql, sql.GetDynamicParameters(), tran);
+                        if (_store.TryPop(out var sqlBuilder))
+                        {
+                            var sql = sqlBuilder.GetSql(options.SqlDialect);
+                            await InnerConnection.ExecuteAsync(sql.Sql, sql.GetDynamicParameters(), tran);
+                        }
+                        else
+                        {
+                            throw new InvalidOperationException("Unit Work Pop Error");
+                        }
                     }
                     Commited = true;
                     await tran.CommitAsync();
@@ -81,39 +88,44 @@ namespace Yxl.Dal.UnitWork
                 {
                     await tran.RollbackAsync();
                 }
+                finally
+                {
+                    _store.Clear();
+                }
 
             }
             return Commited;
         }
 
-        public void RegistAdd<T>(T entity) where T : IEntity
+        public bool RegistAdd<T>(T entity) where T : IEntity
         {
-            Regist(new SqlInsertBuilder<T>(entity));
+            return Regist(new SqlInsertBuilder<T>(entity));
         }
 
-        public void RegistDelete<T>(SqlDeleteBuilder<T> builder) where T : IEntity
+        public bool RegistDelete<T>(SqlDeleteBuilder<T> builder) where T : IEntity
         {
-            Regist(builder);
+            return Regist(builder);
         }
 
-        public void RegistDeleteById<T>(T entity) where T : IEntity
+        public bool RegistDeleteById<T>(object id) where T : IEntity
         {
-            Regist(new SqlDeleteBuilder<T>().DeleteById(entity));
+            return Regist(new SqlDeleteBuilder<T>().DeleteById(id));
         }
 
-        public void RegistUpdate<T>(SqlUpdateBuilder<T> builder) where T : IEntity
+        public bool RegistUpdate<T>(SqlUpdateBuilder<T> builder) where T : IEntity
         {
-            Regist(builder);
+            return Regist(builder);
         }
 
-        public void RegistUpdateByID<T>(T entity) where T : IEntity
+        public bool RegistUpdateByID<T>(T entity) where T : IEntity
         {
-            Regist(new SqlUpdateBuilder<T>().UpdateById(entity));
+            return Regist(new SqlUpdateBuilder<T>().UpdateById(entity));
         }
 
-        public void Regist(ISqlBuilder sqlBuilder)
+        public bool Regist(ISqlBuilder sqlBuilder)
         {
             _store.Push(sqlBuilder);
+            return true;
         }
 
         public void Dispose()
@@ -126,6 +138,7 @@ namespace Yxl.Dal.UnitWork
                 }
                 InnerConnection.Dispose();
             }
+            _store.Clear();
         }
     }
 

@@ -20,9 +20,9 @@ namespace Yxl.Dapper.Extensions.SqlDialect
             get { return '`'; }
         }
 
-        public override string GetIdentitySql(string tableName)
+        public override string GetIdentitySql(string tableName,string identityName)
         {
-            return "SELECT CONVERT(LAST_INSERT_ID(), SIGNED INTEGER) AS ID";
+            return $"SELECT CONVERT(LAST_INSERT_ID(), SIGNED INTEGER) AS {identityName}";
         }
 
         public override string GetPagingSql(string sql, int page, int resultsPerPage, IDictionary<string, object> parameters)

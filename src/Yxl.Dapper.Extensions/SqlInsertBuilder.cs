@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Yxl.Dapper.Extensions.Core;
+using Dapper;
 
 namespace Yxl.Dapper.Extensions
 {
@@ -53,12 +54,12 @@ namespace Yxl.Dapper.Extensions
             if (keyFiled != null)
             {
                 IsQuery = true;
-                sql += sqlDialect.BatchSeperator + sqlDialect.GetIdentitySql(tableName);
+                sql += sqlDialect.BatchSeperator + sqlDialect.GetIdentitySql(tableName,keyFiled.Name);
             }
             return new SqlInfo(sql, param);
         }
 
-        public T GetModesResutOfIdentity(object identity)
+        public T GetModesResutOfIdentity(dynamic identity)
         {
             foreach (var item in typeof(T).CreateFiles())
             {
@@ -67,7 +68,8 @@ namespace Yxl.Dapper.Extensions
                 {
                     if (item.Key)
                     {
-                        item.MetaData.SetValue(model, identity);
+                        var val = SqlMapper.GetValueOfDapperRow(identity, item.Name);
+                        item.MetaData.SetValue(model, val);
                         break;
                     }
                 }
