@@ -1,16 +1,24 @@
-﻿using Yxl.Dal.MySql.Tests.Mock.Entity;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Yxl.Dal.MySql.Tests.Mock.Entity;
+using Yxl.Dal.Repository;
 using Yxl.Dal.UnitWork;
 using Yxl.Dapper.Extensions;
 
 namespace Yxl.Dal.MySql.Tests
 {
     [TestClass]
-    public class UnitWorkTest
+    public class UnitWorkTest : BaseTest
     {
+        protected readonly IRespository<UserEntity> UserRepository;
+        public UnitWorkTest()
+        {
+            UserRepository = serviceProvider.GetRequiredService<IRespository<UserEntity>>();
+        }
 
         [TestMethod]
         public void RegistAdd()
         {
+            
             IUnitWork work = new UnitWork<UserEntity>();
             Assert.IsTrue(work.RegistAdd(new UserEntity()));
         }

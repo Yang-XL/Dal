@@ -3,9 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Yxl.Dal.Aggregate;
-using Yxl.Dal.Common.Util;
 using Yxl.Dal.Context;
-using Yxl.Dal.Options;
 using Yxl.Dal.UnitWork;
 using Yxl.Dapper.Extensions;
 
@@ -13,14 +11,6 @@ namespace Yxl.Dal.Repository
 {
     public class Respository<T> : DbContext<T>, IRespository<T> where T : IEntity
     {
-
-        private IUnitWork UnitWork { get; }
-
-        public Respository()
-        {
-            UnitWork = new UnitWork<T>();
-        }
-
         public T Insert(T model)
         {
             var sqlBuilder = new SqlInsertBuilder<T>(model);
@@ -197,6 +187,11 @@ namespace Yxl.Dal.Repository
             {
                 return connection.Query<T>(sqlInfo.Sql, sqlInfo.GetDynamicParameters());
             }
+        }
+
+        public IUnitWork CreateUnitWork()
+        {
+            return new UnitWork<T>();
         }
     }
 }

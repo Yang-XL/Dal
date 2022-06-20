@@ -3,12 +3,15 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Yxl.Dal.Aggregate;
 using Yxl.Dal.Context;
+using Yxl.Dal.UnitWork;
 using Yxl.Dapper.Extensions;
 
 namespace Yxl.Dal.Repository
 {
     public interface IRespository<T> : IDbContext where T : IEntity
     {
+        IUnitWork CreateUnitWork();
+
         T Insert(T model);
 
         Task<T> InsertAsync(T model);
