@@ -21,10 +21,7 @@ namespace Yxl.Dal.MySql.Tests
                 var _services = new ServiceCollection();
                 var config = new ConfigurationBuilder().Add(new JsonConfigurationSource { Path = "appsettings.json", ReloadOnChange = true }).Build();
                 _services.AddSingleton(config);
-                _services.AddMysqlDal(options =>
-                {
-                    options.UserMysql(config.GetConnectionString("yxl_mysql"));
-                });
+                _services.AddMysqlDal(config.GetConnectionString("yxl_mysql"));
                 serviceProvider = _services.BuildServiceProvider();
             });
         }
