@@ -11,7 +11,7 @@ namespace Yxl.Dal.DI
     {
 
 
-        public static IServiceCollection AddDal<TContext>(this IServiceCollection services)
+        public static IServiceCollection AddDal(this IServiceCollection services)
         {
             services.AddYxlDapperExtensions();
             return services;

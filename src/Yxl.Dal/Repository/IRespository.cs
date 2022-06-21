@@ -35,9 +35,9 @@ namespace Yxl.Dal.Repository
 
         Task<T> GetByIdAsync(object id);
 
-        Task<IEnumerable<T>> QueryAsync(Action<SqlWhereBuilder<T>> where);
+        Task<IEnumerable<T>> QueryWhereAsync(Action<SqlWhereBuilder<T>> where);
 
-        IEnumerable<T> Query(Action<SqlWhereBuilder<T>> where);
+        IEnumerable<T> QueryWhere(Action<SqlWhereBuilder<T>> where);
 
         Task<IEnumerable<T>> QueryAsync(Action<SqlQueryBuilder<T>> query);
 

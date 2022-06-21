@@ -57,7 +57,7 @@ namespace Yxl.Dapper.Extensions.Uitls
                 TenantId = propertyInfo.GetCustomAttributes<TenantAttribute>().Any(),
                 Key = propertyInfo.GetCustomAttributes<KeyAttribute>().Any(),
                 CreateAt = propertyInfo.GetCustomAttributes<CreateAtAttribute>().Any(),
-                Name = propertyInfo.GetCustomAttributes<ColumnAttribute>()?.FirstOrDefault()?.Name ?? propertyInfo.Name,
+                Name = propertyInfo.GetCustomAttribute<ColumnAttribute>()?.Name ?? propertyInfo.Name,
                 Table = type.CreateTable(),
                 MetaData = propertyInfo
             };

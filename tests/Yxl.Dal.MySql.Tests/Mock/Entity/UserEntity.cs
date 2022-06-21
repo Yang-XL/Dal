@@ -8,7 +8,7 @@ namespace Yxl.Dal.MySql.Tests.Mock.Entity
     [Table("user")]
     public class UserEntity : IEntity
     {
-        [Key, Dapper.Extensions.Attributes.Ignore(Dapper.Extensions.Enum.IgnoreEnum.Insert)]
+        [Key, Column("id"), Dapper.Extensions.Attributes.Ignore(Dapper.Extensions.Enum.IgnoreEnum.Insert)]
         public long Id { get; set; }
 
         [Column("login_name")]
@@ -20,10 +20,10 @@ namespace Yxl.Dal.MySql.Tests.Mock.Entity
         [Column("name")]
         public string Name { get; set; }
 
-        [Column("create_at"),CreateAt]
-        public DateTime Created { get; set; }
+        [Column("create_at"), CreateAt]
+        public DateTime? Created { get; set; }
 
-        [Column("update_at"),UpdatedAt]
-        public DateTime Updated { get; set; }
+        [Column("update_at"), UpdatedAt]
+        public DateTime? Updated { get; set; }
     }
 }

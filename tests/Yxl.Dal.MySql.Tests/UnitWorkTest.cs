@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Configuration.Json;
+using Microsoft.Extensions.DependencyInjection;
 using Yxl.Dal.MySql.Tests.Mock.Entity;
 using Yxl.Dal.Repository;
 using Yxl.Dal.UnitWork;
@@ -9,24 +11,40 @@ namespace Yxl.Dal.MySql.Tests
     [TestClass]
     public class UnitWorkTest : BaseTest
     {
-        protected readonly IRespository<UserEntity> UserRepository;
-        public UnitWorkTest()
+        [ClassInitialize]
+        public static async Task Init(TestContext context)
+        {
+            await Task.Run(() =>
+            {
+                Console.WriteLine("UnitWorkTest Is Running");
+            });
+        }
+
+        [TestInitialize]
+        public void GetRepository()
         {
             UserRepository = serviceProvider.GetRequiredService<IRespository<UserEntity>>();
         }
 
+        [TestCleanup]
+        public void ClearRepository()
+        {
+            UserRepository = null;
+        }
+
+
         [TestMethod]
         public void RegistAdd()
         {
-            
-            IUnitWork work = new UnitWork<UserEntity>();
+
+            IUnitWork work = UserRepository.CreateUnitWork();
             Assert.IsTrue(work.RegistAdd(new UserEntity()));
         }
 
         [TestMethod]
         public void RegistDelete()
         {
-            IUnitWork work = new UnitWork<UserEntity>();
+            IUnitWork work = UserRepository.CreateUnitWork();
             var builder = new SqlDeleteBuilder<UserEntity>();
 
             Assert.IsTrue(work.RegistDelete(builder));
@@ -36,7 +54,7 @@ namespace Yxl.Dal.MySql.Tests
         [TestMethod]
         public void RegistDeleteById()
         {
-            IUnitWork work = new UnitWork<UserEntity>();
+            IUnitWork work = UserRepository.CreateUnitWork();
             Assert.IsTrue(work.RegistDeleteById<UserEntity>(0));
         }
 
@@ -44,7 +62,7 @@ namespace Yxl.Dal.MySql.Tests
         public void RegistUpdate()
         {
 
-            IUnitWork work = new UnitWork<UserEntity>();
+            IUnitWork work = UserRepository.CreateUnitWork();
             var builder = new SqlUpdateBuilder<UserEntity>();
             Assert.IsTrue(work.RegistUpdate(builder));
         }
@@ -52,7 +70,7 @@ namespace Yxl.Dal.MySql.Tests
         [TestMethod]
         public void RegistUpdateByID()
         {
-            IUnitWork work = new UnitWork<UserEntity>();
+            IUnitWork work = UserRepository.CreateUnitWork();
             Assert.IsTrue(work.RegistUpdateByID(new UserEntity()));
         }
 

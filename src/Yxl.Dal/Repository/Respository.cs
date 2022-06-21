@@ -147,7 +147,7 @@ namespace Yxl.Dal.Repository
             }
         }
 
-        public async Task<IEnumerable<T>> QueryAsync(Action<SqlWhereBuilder<T>> where)
+        public async Task<IEnumerable<T>> QueryWhereAsync(Action<SqlWhereBuilder<T>> where)
         {
             var builder = new SqlQueryBuilder<T>().Where(where);
             var sqlInfo = builder.GetSql(_sqlDialect);
@@ -157,7 +157,7 @@ namespace Yxl.Dal.Repository
             }
         }
 
-        public IEnumerable<T> Query(Action<SqlWhereBuilder<T>> where)
+        public IEnumerable<T> QueryWhere(Action<SqlWhereBuilder<T>> where)
         {
             var builder = new SqlQueryBuilder<T>().Where(where);
             var sqlInfo = builder.GetSql(_sqlDialect);

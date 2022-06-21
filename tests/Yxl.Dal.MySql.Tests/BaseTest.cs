@@ -1,27 +1,32 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Configuration.Json;
 using Microsoft.Extensions.DependencyInjection;
-using System;
+using Yxl.Dal.MySql.Tests.Mock.Entity;
 using Yxl.Dal.Repository;
 
 namespace Yxl.Dal.MySql.Tests
 {
+    [TestClass]
     public class BaseTest
     {
-        protected readonly IServiceProvider serviceProvider;
 
-        protected readonly IConfiguration Configuration;
+        protected IRespository<UserEntity> UserRepository;
+        protected static IServiceProvider serviceProvider;
 
-        public BaseTest()
+        [AssemblyInitialize()]
+        public static async Task AssemblyInit(TestContext context)
         {
-            var _services = new ServiceCollection();
-            Configuration = new ConfigurationBuilder().Add(new JsonConfigurationSource { Path = "appsettings.json", ReloadOnChange = true }).Build();
-            _services.AddSingleton(Configuration);
-            _services.AddMysqlDal(options =>
+            await Task.Run(() =>
             {
-                options.UserMysql(Configuration.GetConnectionString("yxl_mysql"));
+                var _services = new ServiceCollection();
+                var config = new ConfigurationBuilder().Add(new JsonConfigurationSource { Path = "appsettings.json", ReloadOnChange = true }).Build();
+                _services.AddSingleton(config);
+                _services.AddMysqlDal(options =>
+                {
+                    options.UserMysql(config.GetConnectionString("yxl_mysql"));
+                });
+                serviceProvider = _services.BuildServiceProvider();
             });
-            serviceProvider = _services.BuildServiceProvider();
         }
     }
 }

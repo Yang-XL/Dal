@@ -29,7 +29,7 @@ namespace Yxl.Dapper.Extensions
             IFiled? keyFiled = null;
             foreach (var item in typeof(T).CreateFiles())
             {
-                if (item.FunctionColumn || item.UpdatedAt) continue;
+                if (item.FunctionColumn) continue;
                 if (item.IgnoreInsert)
                 {
                     if (item.Key)
@@ -38,8 +38,11 @@ namespace Yxl.Dapper.Extensions
                     }
                     continue;
                 }
-
-                if (item.CreateAt)
+                if (item.UpdatedAt && item.MetaData.GetValue(model) == null)
+                {
+                    continue;
+                }
+                if (item.CreateAt && item.MetaData.GetValue(model) == null)
                 {
                     insertDic.Add(item, DateTime.Now);
                     continue;
@@ -54,7 +57,7 @@ namespace Yxl.Dapper.Extensions
             if (keyFiled != null)
             {
                 IsQuery = true;
-                sql += sqlDialect.BatchSeperator + sqlDialect.GetIdentitySql(tableName,keyFiled.Name);
+                sql += sqlDialect.BatchSeperator + sqlDialect.GetIdentitySql(tableName, keyFiled.Name);
             }
             return new SqlInfo(sql, param);
         }

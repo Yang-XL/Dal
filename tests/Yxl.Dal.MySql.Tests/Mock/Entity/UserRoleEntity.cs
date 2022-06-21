@@ -8,7 +8,7 @@ namespace Yxl.Dal.MySql.Tests.Mock.Entity
     [Table("user_role")]
     public class UserRoleEntity : IEntity
     {
-        [Key]
+        [Key, Column("id"),]
         public Guid Id { get; set; }
 
         [Column("user_id")]

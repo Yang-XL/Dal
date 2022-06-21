@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using Yxl.Dal.Context;
+using Yxl.Dal.DI;
 using Yxl.Dal.Repository;
 using Yxl.Dapper.Extensions.DI;
 
@@ -14,7 +15,7 @@ namespace Yxl.Dal.MySql
             MySqlOptionsProvider p = new MySqlOptionsProvider();
             options(p);           
             p.Build();
-
+            services.AddDal();
             services.AddScoped(typeof(IDbContext<>), typeof(DbContext<>));
             services.AddScoped(typeof(IRespository<>), typeof(Respository<>));
             return services;

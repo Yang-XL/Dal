@@ -1,5 +1,4 @@
-﻿using Yxl.Dapper.Extensions.SqlDialect;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using Yxl.Dapper.Extensions.Enum;
 
