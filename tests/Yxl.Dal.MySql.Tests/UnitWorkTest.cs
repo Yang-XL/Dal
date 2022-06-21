@@ -23,20 +23,19 @@ namespace Yxl.Dal.MySql.Tests
         [TestInitialize]
         public void GetRepository()
         {
-            UserRepository = serviceProvider.GetRequiredService<IRespository<UserEntity>>();
+            UserRepository = serviceProvider.GetRequiredService<IRespository<MemberEntity>>();
         }
 
         [TestCleanup]
         public void ClearRepository()
         {
-            UserRepository = null;
+            UserRepository.Dispose();
         }
 
 
         [TestMethod]
         public void RegistAdd()
         {
-
             IUnitWork work = UserRepository.CreateUnitWork();
             Assert.IsTrue(work.RegistAdd(new UserEntity()));
         }
@@ -78,13 +77,61 @@ namespace Yxl.Dal.MySql.Tests
         public void Commit()
         {
 
+            var user = new UserEntity()
+            {
+                Id = Guid.NewGuid(),
+                Name = "Admin"
+            };
+
+            var role = new RoleEntity()
+            {
+                Id = Guid.NewGuid(),
+                Name = "administrator"
+            };
+
+            var userRole = new UserRoleEntity()
+            {
+                Id = Guid.NewGuid(),
+                UserId = user.Id,
+                RoleId = role.Id,
+            };
+
+            IUnitWork work = UserRepository.CreateUnitWork();
+            work.RegistAdd(user);
+            work.RegistAdd(role);
+            work.RegistAdd(userRole);
+            var result = work.Commit();
+            Assert.IsTrue(result);
         }
 
         [TestMethod]
         public async Task CommitAsync()
         {
+            var user = new UserEntity()
+            {
+                Id = Guid.NewGuid(),
+                Name = "Admin"
+            };
 
-            await Task.FromResult(1);
+            var role = new RoleEntity()
+            {
+                Id = Guid.NewGuid(),
+                Name = "administrator"
+            };
+
+            var userRole = new UserRoleEntity()
+            {
+                Id = Guid.NewGuid(),
+                UserId = user.Id,
+                RoleId = role.Id,
+            };
+
+            IUnitWork work = UserRepository.CreateUnitWork();
+            work.RegistAdd(user);
+            work.RegistAdd(role);
+            work.RegistAdd(userRole);
+            var result = await work.CommitAsync();
+            Assert.IsTrue(result);
         }
     }
 }

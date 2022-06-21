@@ -22,7 +22,7 @@ namespace Yxl.Dal.MySql.Tests
         [TestInitialize]
         public void GetRepository()
         {
-            UserRepository = serviceProvider.GetRequiredService<IRespository<UserEntity>>();
+            UserRepository = serviceProvider.GetRequiredService<IRespository<MemberEntity>>();
         }
         [TestCleanup]
         public void ClearRepository()
@@ -33,7 +33,7 @@ namespace Yxl.Dal.MySql.Tests
         [TestMethod]
         public async Task InsertAsync()
         {
-            var entity = new UserEntity()
+            var entity = new MemberEntity()
             {
                 Name = "admin",
                 LoginName = "admin",
@@ -46,7 +46,7 @@ namespace Yxl.Dal.MySql.Tests
         [TestMethod]
         public void Insert()
         {
-            var entity = new UserEntity()
+            var entity = new MemberEntity()
             {
                 Name = "admin",
                 LoginName = "admin",
@@ -59,7 +59,7 @@ namespace Yxl.Dal.MySql.Tests
         [TestMethod]
         public async Task UpdateByIdAsync()
         {
-            var entity = new UserEntity()
+            var entity = new MemberEntity()
             {
                 Name = "admin",
                 LoginName = "admin",
@@ -84,7 +84,7 @@ namespace Yxl.Dal.MySql.Tests
         [TestMethod]
         public void UpdateById()
         {
-            var entity = new UserEntity()
+            var entity = new MemberEntity()
             {
                 Name = "admin",
                 LoginName = "admin",
@@ -108,7 +108,7 @@ namespace Yxl.Dal.MySql.Tests
         [TestMethod]
         public void Delete()
         {
-            var entity = new UserEntity()
+            var entity = new MemberEntity()
             {
                 Name = "administrator",
                 LoginName = "admin",
@@ -122,7 +122,7 @@ namespace Yxl.Dal.MySql.Tests
         [TestMethod]
         public async Task DeleteAsync()
         {
-            var entity = new UserEntity()
+            var entity = new MemberEntity()
             {
                 Name = "administrator",
                 LoginName = "admin",
@@ -137,7 +137,7 @@ namespace Yxl.Dal.MySql.Tests
         [TestMethod]
         public void DeleteById()
         {
-            var entity = new UserEntity()
+            var entity = new MemberEntity()
             {
                 Name = "administrator",
                 LoginName = "admin",
@@ -151,7 +151,7 @@ namespace Yxl.Dal.MySql.Tests
         [TestMethod]
         public async Task DeleteByIdAsync()
         {
-            var entity = new UserEntity()
+            var entity = new MemberEntity()
             {
                 Name = "administrator",
                 LoginName = "admin",
@@ -165,7 +165,7 @@ namespace Yxl.Dal.MySql.Tests
         [TestMethod]
         public async Task GetByIdAsync()
         {
-            var entity = new UserEntity()
+            var entity = new MemberEntity()
             {
                 Name = "administrator",
                 LoginName = "admin",
@@ -178,7 +178,7 @@ namespace Yxl.Dal.MySql.Tests
         [TestMethod]
         public void GetById()
         {
-            var entity = new UserEntity()
+            var entity = new MemberEntity()
             {
                 Name = "administrator",
                 LoginName = "admin",
@@ -192,7 +192,7 @@ namespace Yxl.Dal.MySql.Tests
         [TestMethod]
         public async Task QueryWhereAsync()
         {
-            var entity = new UserEntity()
+            var entity = new MemberEntity()
             {
                 Name = "administrator",
                 LoginName = "admin",
@@ -205,7 +205,7 @@ namespace Yxl.Dal.MySql.Tests
         [TestMethod]
         public void QueryWhere()
         {
-            var entity = new UserEntity()
+            var entity = new MemberEntity()
             {
                 Name = "administrator",
                 LoginName = "admin",
@@ -219,7 +219,7 @@ namespace Yxl.Dal.MySql.Tests
         [TestMethod]
         public async Task QueryAsync()
         {
-            var entity = new UserEntity()
+            var entity = new MemberEntity()
             {
                 Name = "administrator",
                 LoginName = "admin",
@@ -227,7 +227,7 @@ namespace Yxl.Dal.MySql.Tests
             };
             await UserRepository.InsertAsync(entity);
 
-            var query = new SqlQueryBuilder<UserEntity>();
+            var query = new SqlQueryBuilder<MemberEntity>();
 
             var result = await UserRepository.QueryAsync(w => w.Select(a => new { a.Id, a.Password }).Where(a => a.Eq(b => b.Name, "administrator")));
             Assert.IsTrue(result.Any());
@@ -236,7 +236,7 @@ namespace Yxl.Dal.MySql.Tests
         [TestMethod]
         public void Query()
         {
-            var entity = new UserEntity()
+            var entity = new MemberEntity()
             {
                 Name = "administrator",
                 LoginName = "admin",
@@ -244,7 +244,7 @@ namespace Yxl.Dal.MySql.Tests
             };
             UserRepository.Insert(entity);
 
-            var query = new SqlQueryBuilder<UserEntity>();
+            var query = new SqlQueryBuilder<MemberEntity>();
 
             var result = UserRepository.Query(w => w.Select(a => new { a.Id, a.Password }).Where(a => a.Eq(b => b.Name, "administrator")));
             Assert.IsTrue(result.Any());

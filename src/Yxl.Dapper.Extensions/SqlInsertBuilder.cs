@@ -29,6 +29,7 @@ namespace Yxl.Dapper.Extensions
             IFiled? keyFiled = null;
             foreach (var item in typeof(T).CreateFiles())
             {
+                var currData = item.MetaData.GetValue(model);
                 if (item.FunctionColumn) continue;
                 if (item.IgnoreInsert)
                 {
@@ -38,7 +39,7 @@ namespace Yxl.Dapper.Extensions
                     }
                     continue;
                 }
-                if (item.UpdatedAt && item.MetaData.GetValue(model) == null)
+                if (item.UpdatedAt && currData == null)
                 {
                     continue;
                 }

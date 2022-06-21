@@ -5,11 +5,17 @@ using Yxl.Dapper.Extensions.Attributes;
 
 namespace Yxl.Dal.MySql.Tests.Mock.Entity
 {
-    [Table("role")]
-    public class RoleEntity : IEntity
+    [Table("member")]
+    public class MemberEntity : IEntity
     {
-        [Key, Column("id")]
-        public Guid Id { get; set; }
+        [Key, Column("id"), Dapper.Extensions.Attributes.Ignore(Dapper.Extensions.Enum.IgnoreEnum.Insert)]
+        public long Id { get; set; }
+
+        [Column("login_name")]
+        public string LoginName { get; set; }
+
+        [Column("pwd")]
+        public string Password { get; set; }
 
         [Column("name")]
         public string Name { get; set; }

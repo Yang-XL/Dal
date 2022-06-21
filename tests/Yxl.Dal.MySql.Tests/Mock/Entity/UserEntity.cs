@@ -8,8 +8,8 @@ namespace Yxl.Dal.MySql.Tests.Mock.Entity
     [Table("user")]
     public class UserEntity : IEntity
     {
-        [Key, Column("id"), Dapper.Extensions.Attributes.Ignore(Dapper.Extensions.Enum.IgnoreEnum.Insert)]
-        public long Id { get; set; }
+        [Key, Column("id")]
+        public Guid Id { get; set; }
 
         [Column("login_name")]
         public string LoginName { get; set; }
