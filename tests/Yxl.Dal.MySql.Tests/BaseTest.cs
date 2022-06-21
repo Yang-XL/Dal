@@ -10,7 +10,6 @@ namespace Yxl.Dal.MySql.Tests
     public class BaseTest
     {
 
-        protected IRespository<MemberEntity> UserRepository;
         protected static IServiceProvider serviceProvider;
 
         [AssemblyInitialize()]

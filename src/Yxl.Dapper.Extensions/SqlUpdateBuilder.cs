@@ -40,6 +40,16 @@ namespace Yxl.Dapper.Extensions
         public SqlInfo GetSql(ISqlDialect sqlDialect)
         {
             var sqlInfo = new SqlInfo();
+
+            var allFiles = typeof(T).CreateFiles();
+            foreach (var file in allFiles)
+            {
+                if (file.UpdatedAt)
+                {
+                    TryAddFile(file, DateTime.Now);
+                }
+            }
+
             var filedSql = _updateFiled.GetSql(sqlDialect);
             sqlInfo.Append($"UPDATE {_updaeTable.GetTableName(sqlDialect)} SET {filedSql.Sql}");
             sqlInfo.AddParameter(filedSql.Parameters);
@@ -64,7 +74,7 @@ namespace Yxl.Dapper.Extensions
                     sqlWhereBuilder.Eq(item, item.MetaData.GetValue(entity));
                     continue;
                 }
-                _updateFiled.Add(new UpdateFiled(item, item.UpdatedAt ? DateTime.Now : item.MetaData.GetValue(entity)));
+                TryAddFile(item, item.UpdatedAt ? DateTime.Now : item.MetaData.GetValue(entity));
             }
             return this;
         }
@@ -73,7 +83,7 @@ namespace Yxl.Dapper.Extensions
         {
             foreach (var item in typeof(T).CreateFiles().Where(a => a.LogicalDelete))
             {
-                _updateFiled.Add(new UpdateFiled(item, false));
+                TryAddFile(item, false);
             }
             sqlWhereBuilder.And(where);
             return this;
@@ -95,7 +105,7 @@ namespace Yxl.Dapper.Extensions
                 }
                 if (item.LogicalDelete)
                 {
-                    _updateFiled.Add(new UpdateFiled(item, false));
+                    TryAddFile(item, false);
                 }
 
             }
@@ -113,11 +123,21 @@ namespace Yxl.Dapper.Extensions
                 }
                 if (item.LogicalDelete)
                 {
-                    _updateFiled.Add(new UpdateFiled(item, false));
+                    TryAddFile(item, false);
                 }
 
             }
             return this;
+        }
+
+        private bool TryAddFile(IFiled file, object val)
+        {
+            if (_updateFiled.Exists(a => a.Filed.Name.Equals(file.Name)))
+            {
+                return false;
+            }
+            _updateFiled.Add(new UpdateFiled(file, val));
+            return true;
         }
     }
 }

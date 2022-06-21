@@ -65,22 +65,14 @@ namespace Yxl.Dal.Repository
         {
             var builder = new SqlUpdateBuilder<T>();
             update(builder);
-            var sqlInfo = builder.GetSql(_sqlDialect);
-            using (var connection = OpenConnection())
-            {
-                return connection.Execute(sqlInfo.Sql, sqlInfo.GetDynamicParameters());
-            }
+            return Update(builder);
         }
 
         public async Task<int> UpdateAsync(Action<SqlUpdateBuilder<T>> update)
         {
             var builder = new SqlUpdateBuilder<T>();
             update(builder);
-            var sqlInfo = builder.GetSql(_sqlDialect);
-            using (var connection = await OpenConnectionAsync())
-            {
-                return await connection.ExecuteAsync(sqlInfo.Sql, sqlInfo.GetDynamicParameters());
-            }
+            return await UpdateAsync(builder);
         }
 
         public int Delete(Action<SqlWhereBuilder<T>> where)
@@ -189,9 +181,22 @@ namespace Yxl.Dal.Repository
             }
         }
 
-        public IUnitWork CreateUnitWork()
+        public int Update(SqlUpdateBuilder<T> update)
         {
-            return new UnitWork<T>();
+            var sqlInfo = update.GetSql(_sqlDialect);
+            using (var connection = OpenConnection())
+            {
+                return connection.Execute(sqlInfo.Sql, sqlInfo.GetDynamicParameters());
+            }
+        }
+
+        public async Task<int> UpdateAsync(SqlUpdateBuilder<T> update)
+        {
+            var sqlInfo = update.GetSql(_sqlDialect);
+            using (var connection = await OpenConnectionAsync())
+            {
+                return await connection.ExecuteAsync(sqlInfo.Sql, sqlInfo.GetDynamicParameters());
+            }
         }
     }
 }

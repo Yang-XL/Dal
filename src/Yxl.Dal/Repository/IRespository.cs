@@ -3,15 +3,12 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Yxl.Dal.Aggregate;
 using Yxl.Dal.Context;
-using Yxl.Dal.UnitWork;
 using Yxl.Dapper.Extensions;
 
 namespace Yxl.Dal.Repository
 {
     public interface IRespository<T> : IDbContext where T : IEntity
     {
-        IUnitWork CreateUnitWork();
-
         T Insert(T model);
 
         Task<T> InsertAsync(T model);
@@ -22,6 +19,10 @@ namespace Yxl.Dal.Repository
         int Update(Action<SqlUpdateBuilder<T>> update);
 
         Task<int> UpdateAsync(Action<SqlUpdateBuilder<T>> update);
+
+        int Update(SqlUpdateBuilder<T> update);
+
+        Task<int> UpdateAsync(SqlUpdateBuilder<T> update);
 
         int Delete(Action<SqlWhereBuilder<T>> where);
 

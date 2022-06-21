@@ -10,7 +10,7 @@ using Yxl.Dapper.Extensions;
 
 namespace Yxl.Dal.UnitWork
 {
-    public class UnitWork : IUnitWork, IDisposable
+    public class UnitWork : IUnitWork
     {
         private readonly ConcurrentStack<ISqlBuilder> _store = new ConcurrentStack<ISqlBuilder>();
 
@@ -92,7 +92,6 @@ namespace Yxl.Dal.UnitWork
                 {
                     _store.Clear();
                 }
-
             }
             return Commited;
         }
@@ -142,7 +141,7 @@ namespace Yxl.Dal.UnitWork
         }
     }
 
-    public class UnitWork<T> : UnitWork where T : IEntity
+    public class UnitWork<T> : UnitWork, IUnitWork<T> where T : IEntity
     {
         public UnitWork() : base(DbOptionStore.GetOptions<T>())
         {

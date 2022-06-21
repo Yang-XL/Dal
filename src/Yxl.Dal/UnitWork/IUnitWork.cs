@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Yxl.Dal.Aggregate;
 using Yxl.Dapper.Extensions;
 
@@ -7,7 +8,7 @@ namespace Yxl.Dal.UnitWork
     /// <summary>
     /// 工作单元
     /// </summary>
-    public interface IUnitWork
+    public interface IUnitWork : IDisposable
     {
         /// <summary>
         /// 注册添加
@@ -57,4 +58,6 @@ namespace Yxl.Dal.UnitWork
         bool Commited { get; }
 
     }
+
+    public interface IUnitWork<T> : IUnitWork { }
 }

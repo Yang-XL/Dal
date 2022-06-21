@@ -10,7 +10,9 @@ namespace Yxl.Dal.MySql.Tests
     [TestClass]
     public class RespositoryTest : BaseTest
     {
-       
+
+        protected IRespository<MemberEntity> UserRepository;
+
         [ClassInitialize]
         public static async Task Init(TestContext context)
         {
@@ -104,6 +106,55 @@ namespace Yxl.Dal.MySql.Tests
             Assert.IsNotNull(result.Updated);
             Assert.IsNotNull(result.Created);
         }
+
+        [TestMethod]
+        public async Task UpdateAsync()
+        {
+            var entity = new MemberEntity()
+            {
+                Name = "admin",
+                LoginName = "admin",
+                Password = "123",
+            };
+            await UserRepository.InsertAsync(entity);
+
+            var result = await UserRepository.GetByIdAsync(entity.Id);
+
+            Assert.IsNull(result.Updated);
+            Assert.IsNotNull(result.Created);
+
+            await UserRepository.UpdateAsync((builder) => builder.Set(a => a.Password, "456").Where(w => w.Eq(a => a.Id, entity.Id)));
+            result = await UserRepository.GetByIdAsync(entity.Id);
+            Assert.AreEqual(result.Password, "456");
+
+            Assert.IsNotNull(result.Updated);
+            Assert.IsNotNull(result.Created);
+        }
+
+        [TestMethod]
+        public void Update()
+        {
+            var entity = new MemberEntity()
+            {
+                Name = "admin",
+                LoginName = "admin",
+                Password = "123",
+            };
+            UserRepository.Insert(entity);
+
+            var result = UserRepository.GetById(entity.Id);
+
+            Assert.IsNull(result.Updated);
+            Assert.IsNotNull(result.Created);
+
+            UserRepository.Update((builder) => builder.Set(a => a.Password, "456").Where(w => w.Eq(a => a.Id, entity.Id)));
+            result = UserRepository.GetById(entity.Id);
+            Assert.AreEqual(result.Password, "456");
+
+            Assert.IsNotNull(result.Updated);
+            Assert.IsNotNull(result.Created);
+        }
+
 
         [TestMethod]
         public void Delete()

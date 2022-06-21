@@ -20,57 +20,52 @@ namespace Yxl.Dal.MySql.Tests
             });
         }
 
+        protected IUnitWork<MemberEntity> unitWork;
         [TestInitialize]
         public void GetRepository()
         {
-            UserRepository = serviceProvider.GetRequiredService<IRespository<MemberEntity>>();
+            unitWork = serviceProvider.GetRequiredService<IUnitWork<MemberEntity>>();
         }
 
         [TestCleanup]
         public void ClearRepository()
         {
-            UserRepository.Dispose();
+            unitWork.Dispose();
         }
 
 
         [TestMethod]
         public void RegistAdd()
         {
-            IUnitWork work = UserRepository.CreateUnitWork();
-            Assert.IsTrue(work.RegistAdd(new UserEntity()));
+            Assert.IsTrue(unitWork.RegistAdd(new UserEntity()));
         }
 
         [TestMethod]
         public void RegistDelete()
         {
-            IUnitWork work = UserRepository.CreateUnitWork();
             var builder = new SqlDeleteBuilder<UserEntity>();
 
-            Assert.IsTrue(work.RegistDelete(builder));
-            Assert.IsTrue(work.RegistDeleteById<UserEntity>(0));
+            Assert.IsTrue(unitWork.RegistDelete(builder));
+            Assert.IsTrue(unitWork.RegistDeleteById<UserEntity>(0));
         }
 
         [TestMethod]
         public void RegistDeleteById()
         {
-            IUnitWork work = UserRepository.CreateUnitWork();
-            Assert.IsTrue(work.RegistDeleteById<UserEntity>(0));
+            Assert.IsTrue(unitWork.RegistDeleteById<UserEntity>(0));
         }
 
         [TestMethod]
         public void RegistUpdate()
         {
-
-            IUnitWork work = UserRepository.CreateUnitWork();
             var builder = new SqlUpdateBuilder<UserEntity>();
-            Assert.IsTrue(work.RegistUpdate(builder));
+            Assert.IsTrue(unitWork.RegistUpdate(builder));
         }
 
         [TestMethod]
         public void RegistUpdateByID()
         {
-            IUnitWork work = UserRepository.CreateUnitWork();
-            Assert.IsTrue(work.RegistUpdateByID(new UserEntity()));
+            Assert.IsTrue(unitWork.RegistUpdateByID(new UserEntity()));
         }
 
         [TestMethod]
@@ -96,11 +91,10 @@ namespace Yxl.Dal.MySql.Tests
                 RoleId = role.Id,
             };
 
-            IUnitWork work = UserRepository.CreateUnitWork();
-            work.RegistAdd(user);
-            work.RegistAdd(role);
-            work.RegistAdd(userRole);
-            var result = work.Commit();
+            unitWork.RegistAdd(user);
+            unitWork.RegistAdd(role);
+            unitWork.RegistAdd(userRole);
+            var result = unitWork.Commit();
             Assert.IsTrue(result);
         }
 
@@ -126,11 +120,10 @@ namespace Yxl.Dal.MySql.Tests
                 RoleId = role.Id,
             };
 
-            IUnitWork work = UserRepository.CreateUnitWork();
-            work.RegistAdd(user);
-            work.RegistAdd(role);
-            work.RegistAdd(userRole);
-            var result = await work.CommitAsync();
+            unitWork.RegistAdd(user);
+            unitWork.RegistAdd(role);
+            unitWork.RegistAdd(userRole);
+            var result = await unitWork.CommitAsync();
             Assert.IsTrue(result);
         }
     }
