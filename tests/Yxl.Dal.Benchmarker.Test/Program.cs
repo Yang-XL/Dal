@@ -10,6 +10,8 @@ namespace MyApp // Note: actual namespace depends on the project name.
         {
             Console.WriteLine("Being");
             var summary = BenchmarkRunner.Run<SqlWhereBuilderTest>();
+            Console.WriteLine("Press Enter Exit");
+            Console.ReadLine();
         }
     }
 }

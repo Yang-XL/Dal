@@ -48,7 +48,7 @@ namespace Yxl.Dal.UnitWork
                     foreach (var item in _store)
                     {
                         var sql = item.GetSql(options.SqlDialect);
-                        InnerConnection.Execute(sql.Sql, sql.GetDynamicParameters(), tran);
+                        InnerConnection.Execute(sql.Sql.ToString(), sql.GetDynamicParameters(), tran);
                     }
                     Commited = true;
                     tran.Commit();
@@ -74,7 +74,7 @@ namespace Yxl.Dal.UnitWork
                         if (_store.TryPop(out var sqlBuilder))
                         {
                             var sql = sqlBuilder.GetSql(options.SqlDialect);
-                            await InnerConnection.ExecuteAsync(sql.Sql, sql.GetDynamicParameters(), tran);
+                            await InnerConnection.ExecuteAsync(sql.Sql.ToString(), sql.GetDynamicParameters(), tran);
                         }
                         else
                         {

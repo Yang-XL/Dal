@@ -19,10 +19,10 @@ namespace Yxl.Dal.Repository
             {
                 if (sqlBuilder.IsQuery)
                 {
-                    var identity = connection.QueryFirst<object>(sqlInfo.Sql, sqlInfo.GetDynamicParameters());
+                    var identity = connection.QueryFirst<object>(sqlInfo.Sql.ToString(), sqlInfo.GetDynamicParameters());
                     return sqlBuilder.GetModesResutOfIdentity(identity);
                 }
-                connection.Execute(sqlInfo.Sql, sqlInfo.GetDynamicParameters());
+                connection.Execute(sqlInfo.Sql.ToString(), sqlInfo.GetDynamicParameters());
             }
             return model;
         }
@@ -35,10 +35,10 @@ namespace Yxl.Dal.Repository
             {
                 if (sqlBuilder.IsQuery)
                 {
-                    var identity = await connection.QueryFirstAsync<object>(sqlInfo.Sql, sqlInfo.GetDynamicParameters());
+                    var identity = await connection.QueryFirstAsync<object>(sqlInfo.Sql.ToString(), sqlInfo.GetDynamicParameters());
                     return sqlBuilder.GetModesResutOfIdentity(identity);
                 }
-                await connection.ExecuteAsync(sqlInfo.Sql, sqlInfo.GetDynamicParameters());
+                await connection.ExecuteAsync(sqlInfo.Sql.ToString(), sqlInfo.GetDynamicParameters());
             }
             return model;
         }
@@ -48,7 +48,7 @@ namespace Yxl.Dal.Repository
             var sqlInfo = new SqlUpdateBuilder<T>().UpdateById(model).GetSql(_sqlDialect);
             using (var connection = OpenConnection())
             {
-                return connection.Execute(sqlInfo.Sql, sqlInfo.GetDynamicParameters());
+                return connection.Execute(sqlInfo.Sql.ToString(), sqlInfo.GetDynamicParameters());
             }
         }
 
@@ -57,7 +57,7 @@ namespace Yxl.Dal.Repository
             var sqlInfo = new SqlUpdateBuilder<T>().UpdateById(model).GetSql(_sqlDialect);
             using (var connection = await OpenConnectionAsync())
             {
-                return await connection.ExecuteAsync(sqlInfo.Sql, sqlInfo.GetDynamicParameters());
+                return await connection.ExecuteAsync(sqlInfo.Sql.ToString(), sqlInfo.GetDynamicParameters());
             }
         }
 
@@ -82,7 +82,7 @@ namespace Yxl.Dal.Repository
             var sqlInfo = builder.GetSql(_sqlDialect);
             using (var connection = OpenConnection())
             {
-                return connection.Execute(sqlInfo.Sql, sqlInfo.GetDynamicParameters());
+                return connection.Execute(sqlInfo.Sql.ToString(), sqlInfo.GetDynamicParameters());
             }
         }
 
@@ -93,7 +93,7 @@ namespace Yxl.Dal.Repository
             var sqlInfo = builder.GetSql(_sqlDialect);
             using (var connection = await OpenConnectionAsync())
             {
-                return await connection.ExecuteAsync(sqlInfo.Sql, sqlInfo.GetDynamicParameters());
+                return await connection.ExecuteAsync(sqlInfo.Sql.ToString(), sqlInfo.GetDynamicParameters());
             }
         }
 
@@ -104,7 +104,7 @@ namespace Yxl.Dal.Repository
             var sqlInfo = builder.GetSql(_sqlDialect);
             using (var connection = OpenConnection())
             {
-                return connection.Execute(sqlInfo.Sql, sqlInfo.GetDynamicParameters());
+                return connection.Execute(sqlInfo.Sql.ToString(), sqlInfo.GetDynamicParameters());
             }
         }
 
@@ -115,7 +115,7 @@ namespace Yxl.Dal.Repository
             var sqlInfo = builder.GetSql(_sqlDialect);
             using (var connection = await OpenConnectionAsync())
             {
-                return await connection.ExecuteAsync(sqlInfo.Sql, sqlInfo.GetDynamicParameters());
+                return await connection.ExecuteAsync(sqlInfo.Sql.ToString(), sqlInfo.GetDynamicParameters());
             }
         }
 
@@ -125,7 +125,7 @@ namespace Yxl.Dal.Repository
             var sqlInfo = builder.QueryById(_sqlDialect, id);
             using (var connection = OpenConnection())
             {
-                return connection.QueryFirstOrDefault<T>(sqlInfo.Sql, sqlInfo.GetDynamicParameters());
+                return connection.QueryFirstOrDefault<T>(sqlInfo.Sql.ToString(), sqlInfo.GetDynamicParameters());
             }
         }
 
@@ -135,7 +135,7 @@ namespace Yxl.Dal.Repository
             var sqlInfo = builder.QueryById(_sqlDialect, id);
             using (var connection = await OpenConnectionAsync())
             {
-                return await connection.QueryFirstOrDefaultAsync<T>(sqlInfo.Sql, sqlInfo.GetDynamicParameters());
+                return await connection.QueryFirstOrDefaultAsync<T>(sqlInfo.Sql.ToString(), sqlInfo.GetDynamicParameters());
             }
         }
 
@@ -145,7 +145,7 @@ namespace Yxl.Dal.Repository
             var sqlInfo = builder.GetSql(_sqlDialect);
             using (var connection = await OpenConnectionAsync())
             {
-                return await connection.QueryAsync<T>(sqlInfo.Sql, sqlInfo.GetDynamicParameters());
+                return await connection.QueryAsync<T>(sqlInfo.Sql.ToString(), sqlInfo.GetDynamicParameters());
             }
         }
 
@@ -155,7 +155,7 @@ namespace Yxl.Dal.Repository
             var sqlInfo = builder.GetSql(_sqlDialect);
             using (var connection = OpenConnection())
             {
-                return connection.Query<T>(sqlInfo.Sql, sqlInfo.GetDynamicParameters());
+                return connection.Query<T>(sqlInfo.Sql.ToString(), sqlInfo.GetDynamicParameters());
             }
         }
 
@@ -166,7 +166,7 @@ namespace Yxl.Dal.Repository
             var sqlInfo = builder.GetSql(_sqlDialect);
             using (var connection = await OpenConnectionAsync())
             {
-                return await connection.QueryAsync<T>(sqlInfo.Sql, sqlInfo.GetDynamicParameters());
+                return await connection.QueryAsync<T>(sqlInfo.Sql.ToString(), sqlInfo.GetDynamicParameters());
             }
         }
 
@@ -177,7 +177,7 @@ namespace Yxl.Dal.Repository
             var sqlInfo = builder.GetSql(_sqlDialect);
             using (var connection = OpenConnection())
             {
-                return connection.Query<T>(sqlInfo.Sql, sqlInfo.GetDynamicParameters());
+                return connection.Query<T>(sqlInfo.Sql.ToString(), sqlInfo.GetDynamicParameters());
             }
         }
 
@@ -186,7 +186,7 @@ namespace Yxl.Dal.Repository
             var sqlInfo = update.GetSql(_sqlDialect);
             using (var connection = OpenConnection())
             {
-                return connection.Execute(sqlInfo.Sql, sqlInfo.GetDynamicParameters());
+                return connection.Execute(sqlInfo.Sql.ToString(), sqlInfo.GetDynamicParameters());
             }
         }
 
@@ -195,7 +195,7 @@ namespace Yxl.Dal.Repository
             var sqlInfo = update.GetSql(_sqlDialect);
             using (var connection = await OpenConnectionAsync())
             {
-                return await connection.ExecuteAsync(sqlInfo.Sql, sqlInfo.GetDynamicParameters());
+                return await connection.ExecuteAsync(sqlInfo.Sql.ToString(), sqlInfo.GetDynamicParameters());
             }
         }
     }

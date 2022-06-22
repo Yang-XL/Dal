@@ -23,7 +23,7 @@ namespace Yxl.Dal.Benchmarker.Test
         public void NeTest()
         {
             var sqlWhereBuilder = new SqlWhereBuilder<UserEntity>();
-            sqlWhereBuilder.Ne(a => a.Id, "").And(a => a.Eq(b => b.Name, "张三").Or().Eq(b => b.Name, "李四"));
+            sqlWhereBuilder.Ne(a => a.Id, "").And(a => a.Eq(b => b.Name, "张三"));
             var sqlWhere = sqlWhereBuilder.GetSqlWhere(sqlDialect);
             //Console.WriteLine(sqlWhere.Sql);
             //sqlWhere.Parameters.ForEach(a => Console.WriteLine($"[{a.Name} : {a.Value}]"));
@@ -33,7 +33,7 @@ namespace Yxl.Dal.Benchmarker.Test
         public void InTest()
         {
             var sqlWhereBuilder = new SqlWhereBuilder<UserEntity>();
-            sqlWhereBuilder.In(a => a.Id, new[] { 1, 2 });
+            sqlWhereBuilder.In(a => a.Id, new[] { 1, 2 }).And(a => a.Eq(b => b.Name, "张三").Or().Eq(b => b.Name, "李四"));
             var sqlWhere = sqlWhereBuilder.GetSqlWhere(sqlDialect);
             //Console.WriteLine(sqlWhere.Sql);
             //sqlWhere.Parameters.ForEach(a => Console.WriteLine($"[{a.Name} : {a.Value}]"));

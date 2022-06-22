@@ -52,7 +52,7 @@ namespace Yxl.Dapper.Extensions.Uitls
                 sb.Append(fileSql.Sql);
                 sqlInfo.AddParameter(fileSql.Parameters);
             }
-            sqlInfo.Sql = sb.ToString();
+            sqlInfo.Sql = sb;
             return sqlInfo;
         }
     }

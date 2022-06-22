@@ -46,11 +46,7 @@ namespace Yxl.Dapper.Extensions
             var sqlInfo = new SqlInfo();
             sqlInfo.Append($"DELETE FROM {table.GetTableName(sqlDialect)}");
             var sqlWhere = sqlWhereBuilder.GetSql(sqlDialect);
-            if (!string.IsNullOrWhiteSpace(sqlWhere.Sql))
-            {
-                sqlInfo.Append($" WHERE {sqlWhere.Sql}");
-                sqlInfo.AddParameter(sqlWhere.Parameters);
-            }
+            sqlInfo.Append(sqlWhere);
             return sqlInfo;
         }
 

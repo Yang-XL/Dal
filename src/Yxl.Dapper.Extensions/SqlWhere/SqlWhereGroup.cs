@@ -41,7 +41,7 @@ namespace Yxl.Dapper.Extensions.SqlWhere
                 }
                 if (item is ISqlWhereGroup op && op.Wheres.Count > 1)
                 {
-                    sb.Append($"({sqlInfo.Sql})");
+                    sb.AppendFormat("({0})", sqlInfo.Sql);
                     continue;
                 }
                 sb.Append(sqlInfo.Sql);

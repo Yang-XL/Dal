@@ -36,12 +36,8 @@ namespace Yxl.Dapper.Extensions
             sqlInfo.Append("SELECT ");
             sqlInfo.Append(!_selectFiled.Any() ? "*" : _selectFiled.GetSqlSelect(sqlDialect).ToString());
             sqlInfo.Append($" FROM {_table.GetTableName(sqlDialect)}");
-            var sqlWhere = _sqlWhereBuilder.GetSqlWhere(sqlDialect);
-            if (!string.IsNullOrWhiteSpace(sqlWhere.Sql))
-            {
-                sqlInfo.Append($" WHERE {sqlWhere.Sql}");
-                sqlInfo.AddParameter(sqlWhere.Parameters);
-            }
+            var sqlWhere = _sqlWhereBuilder.GetSqlWhere(sqlDialect);           
+            sqlInfo.AppendSqlWhere(sqlWhere);
             sqlInfo.Append(!_groupBy.Any() ? "" : $" GROUP BY {_groupBy.GetSqlSelect(sqlDialect)}");
             foreach (var item in _orderByFiled)
             {
