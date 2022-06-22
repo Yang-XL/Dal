@@ -21,12 +21,11 @@ namespace Yxl.Dapper.Extensions.SqlWhere.Impl
         public IEnumerable In { get; set; }
 
 
-        public override SqlInfo GetSql(ISqlDialect sqlDialect, ref IList<Parameter> parameters)
+        public override void GetSql(ISqlDialect sqlDialect, ref SqlInfo sqlWhereItem)
         {
-            var parameName = GetParamName(sqlDialect, ref parameters);
+            var parameName = GetParamName(sqlDialect, In, ref sqlWhereItem);
             var sql = string.Format($"{Filed.GetSqlWhereColumnName(sqlDialect)} {Op.GetStringFormat()}", $"{parameName}");
-            parameters.Add(new Parameter(parameName, In));
-            return new SqlInfo(sql, parameters);
+            sqlWhereItem.Append(sql);
         }
     }
 }

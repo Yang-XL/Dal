@@ -30,7 +30,7 @@ namespace Yxl.Dapper.Extensions.Metadata
             var parameterName = $"{sqlDialect.ParameterPrefix}U_{Filed.Name}";
             var sql = $"{Filed.Name}={parameterName}";
             var result = new SqlInfo(sql);
-            result.AddParameter(new Parameter(parameterName, Value));
+            result.AddParameter(parameterName, Value);
             return result;
         }
 

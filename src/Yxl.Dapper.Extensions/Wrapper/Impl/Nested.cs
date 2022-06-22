@@ -8,7 +8,7 @@ using Yxl.Dapper.Extensions.Core;
 namespace Yxl.Dapper.Extensions.Wrapper.Impl
 {
     public abstract class Nested<Children> : INested<Children>
-        where Children : class ,INested<Children> ,new()
+        where Children : class, INested<Children>, new()
     {
         public ISqlWhereGroup Group { get; set; } = new SqlWhereGroup();
 
@@ -50,9 +50,10 @@ namespace Yxl.Dapper.Extensions.Wrapper.Impl
 
         public virtual SqlInfo GetSqlWhere(ISqlDialect sqlDialect)
         {
-            IList<Parameter> par = new List<Parameter>();
+            var sqlWhere = new SqlInfo();
             AppendQuery?.Invoke(this as Children);
-            return Group.GetSql(sqlDialect, ref par);
+            Group.GetSql(sqlDialect, ref sqlWhere);
+            return sqlWhere;
         }
 
         protected virtual Action<Children> AppendQuery { get; set; } = null;

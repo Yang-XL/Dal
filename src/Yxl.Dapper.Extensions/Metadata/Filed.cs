@@ -129,7 +129,7 @@ namespace Yxl.Dapper.Extensions.Metadata
 
         public virtual string GetParameterName(ISqlDialect sqlDialect)
         {
-            return sqlDialect.ParameterPrefix + Name;
+            return $"{sqlDialect.ParameterPrefix}{Name}";
         }
 
         public string GetSelectColumnSql(ISqlDialect sqlDialect)

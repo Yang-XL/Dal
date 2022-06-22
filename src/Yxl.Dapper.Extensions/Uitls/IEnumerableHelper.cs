@@ -50,7 +50,7 @@ namespace Yxl.Dapper.Extensions.Uitls
                 if (sb.Length > 0) sb.Append(",");
                 var fileSql = item.GetSql(sqlDialect);
                 sb.Append(fileSql.Sql);
-                sqlInfo.AddParameter(fileSql.Parameters);
+                sqlInfo.AddParameters(fileSql.Parameters);
             }
             sqlInfo.Sql = sb;
             return sqlInfo;

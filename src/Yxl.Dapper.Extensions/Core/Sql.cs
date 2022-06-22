@@ -7,49 +7,75 @@ namespace Yxl.Dapper.Extensions.Core
 {
     public class SqlInfo
     {
-        public SqlInfo()
+
+        public static SqlInfo SelectSqlInfo()
         {
+            return new SqlInfo("SELECT ");
+        }        
+
+        public static SqlInfo UpdateSqlInfo()
+        {
+            return new SqlInfo("UPDATE ");
         }
 
-        public SqlInfo(string sql) : base()
+        public static SqlInfo InsertSqlInfo()
+        {
+            return new SqlInfo("INSERT ");
+        }
+
+        public static SqlInfo FromSqlInfo()
+        {
+            return new SqlInfo(" FROM ");
+        }
+
+        public static SqlInfo WhereSqlInfo()
+        {
+            return new SqlInfo(" WHERE ");
+        }
+
+
+        #region 构造函数
+
+        public SqlInfo()
+        {
+            Sql = new StringBuilder(150);
+        }
+
+        public SqlInfo(string sql) : this()
         {
             Sql.Append(sql);
         }
-        public SqlInfo(StringBuilder sql)
+        public SqlInfo(StringBuilder sql) : this()
         {
             Sql.Append(sql);
         }
-        public SqlInfo(string sql, IEnumerable<Parameter> parameters)
+        public SqlInfo(string sql, IEnumerable<Parameter> parameters) : this()
         {
             Sql.Append(sql);
             Parameters.AddRange(parameters);
         }
 
-        public StringBuilder Sql { get; set; } = new StringBuilder();
+        #endregion
 
+        #region 属性
+        public StringBuilder Sql { get; set; }
 
         public List<Parameter> Parameters { get; set; } = new List<Parameter>();
 
-        public void AddParameter(params Parameter[] parameter)
-        {
-            Parameters.AddRange(parameter);
-        }
+        #endregion
 
-        public void AddParameter(string key, object val)
+
+        public string AddParameter(string key, object val)
         {
             Parameters.Add(new Parameter(key, val));
+            return key;
         }
 
 
-        public void AddParameter(IEnumerable<Parameter> parameters)
+        public void AddParameters(IEnumerable<Parameter> parameters)
         {
             if (parameters == null) return;
             Parameters.AddRange(parameters);
-        }
-        public void AddParameter(IDictionary<string, object> parameters)
-        {
-            if (parameters == null) return;
-            Parameters.AddRange(parameters.Select(a => new Parameter(a.Key, a.Value)));
         }
 
         public SqlInfo Append(SqlInfo sqlInfo)
@@ -95,10 +121,4 @@ namespace Yxl.Dapper.Extensions.Core
         }
     }
 
-    public class PageSqlInfo
-    {
-        public SqlInfo PagedSql { get; set; }
-
-        public SqlInfo TotalSql { get; set; }
-    }
 }

@@ -20,7 +20,7 @@ namespace Yxl.Dapper.Extensions.SqlWhere
         ///  SqlWhere
         ///  eg: 1 = 1 and 2 = 2 and ( 3 = 3 or 4 = 4) and 5 = 5 or 6=6
         /// </returns>
-        SqlInfo GetSql(ISqlDialect sqlDialect, ref IList<Parameter> parameters);
+        void GetSql(ISqlDialect sqlDialect, ref SqlInfo sqlWhere);
     }
 
 

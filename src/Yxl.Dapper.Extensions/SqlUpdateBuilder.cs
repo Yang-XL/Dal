@@ -52,7 +52,7 @@ namespace Yxl.Dapper.Extensions
 
             var filedSql = _updateFiled.GetSql(sqlDialect);
             sqlInfo.Append($"UPDATE {_updaeTable.GetTableName(sqlDialect)} SET {filedSql.Sql}");
-            sqlInfo.AddParameter(filedSql.Parameters);
+            sqlInfo.AddParameters(filedSql.Parameters);
             var sqlWhere = sqlWhereBuilder.GetSqlWhere(sqlDialect);
             sqlInfo.AppendSqlWhere(sqlWhere);
            
