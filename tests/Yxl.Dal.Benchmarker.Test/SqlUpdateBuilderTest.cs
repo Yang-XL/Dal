@@ -1,29 +1,34 @@
 ﻿using Mock.Entitys;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Yxl.Dapper.Extensions;
 using Yxl.Dapper.Extensions.SqlDialect;
 
-namespace Yxl.Dapper.Extensions.Tests
+namespace Yxl.Dal.Benchmarker.Test
 {
-    [TestClass]
     public class SqlUpdateBuilderTest
     {
         private readonly ISqlDialect sqlDialect = new MySqlDialect();
-        [TestMethod]
+
         public void UpdateByWhereTest()
         {
             SqlUpdateBuilder<UserEntity> builder = new();
-            builder.Set(a => a.Name, "王五");
-            builder.Where(w => w.Eq(a => a.Id, "").And(a => a.Eq(b => b.Name, "张三").Or().Eq(b => b.Name, "李四")));
+            builder.Set(a => a.Name, "Administraotr");
+            builder.Where(w => w.Eq(a => a.Id, "").And(a => a.Eq(b => b.Password, "123").Or().Eq(b => b.LoginName, "admin")));
             var sqlWhere = builder.GetSql(sqlDialect);
             Console.WriteLine(sqlWhere.Sql);
             sqlWhere.Parameters.ForEach(a => Console.WriteLine($"[{a.Name} : {a.Value}]"));
 
         }
 
-        [TestMethod]
+
         public void UpdateNoWhereTest()
         {
             SqlUpdateBuilder<UserEntity> builder = new();
-            builder.Set(a => a.Name, "王五").Set(a => a.Id, 0);
+            builder.Set(a => a.Name, "admin").Set(a => a.Id, Guid.NewGuid());
 
             var sqlWhere = builder.GetSql(sqlDialect);
             Console.WriteLine(sqlWhere.Sql);
@@ -31,16 +36,15 @@ namespace Yxl.Dapper.Extensions.Tests
 
         }
 
-        [TestMethod]
+
         public void UpdateByIdTest()
         {
-            UserEntity user = new UserEntity()
+            var user = new UserEntity()
             {
-                Id = Guid.NewGuid(),
-                Created =DateTime.Now,
-                Updated = DateTime.Now,
-                Name ="王"        
-                
+                Name = "admin",
+                LoginName = "admin",
+                Password = "123",
+                Id = Guid.NewGuid()
             };
             user.Name = "李";
             SqlUpdateBuilder<UserEntity> builder = new();

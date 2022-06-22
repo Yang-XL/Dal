@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Configuration.Json;
 using Microsoft.Extensions.DependencyInjection;
+using Mock.Entitys;
 using Yxl.Dal.MySql.Tests.Mock.Entity;
 using Yxl.Dal.Repository;
 using Yxl.Dal.UnitWork;

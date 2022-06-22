@@ -28,6 +28,7 @@
 		<ProjectReference Include="..\..\src\Yxl.Dal.MySql\Yxl.Dal.MySql.csproj" />
 		<ProjectReference Include="..\..\src\Yxl.Dal\Yxl.Dal.csproj" />
 		<ProjectReference Include="..\..\src\Yxl.Dapper.Extensions\Yxl.Dapper.Extensions.csproj" />
+		<ProjectReference Include="..\mock\Mock.Entitys\Mock.Entitys.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>

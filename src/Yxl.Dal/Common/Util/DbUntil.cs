@@ -11,7 +11,7 @@ namespace Yxl.Dal.Common.Util
 
         private static Dictionary<Type, string> store = new Dictionary<Type, string>();
 
-        public static string? GetDbName<T>()
+        public static string GetDbName<T>()
         {
             if (store.TryGetValue(typeof(T), out var name))
             {

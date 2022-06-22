@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>netstandard2.1</TargetFramework>
+		<Nullable>enable</Nullable>
+	</PropertyGroup>
+
+
+	<ItemGroup>
+    <ProjectReference Include="..\..\..\src\Yxl.Dal.MySql\Yxl.Dal.MySql.csproj" />
+    <ProjectReference Include="..\..\..\src\Yxl.Dal\Yxl.Dal.csproj" />
+    <ProjectReference Include="..\..\..\src\Yxl.Dapper.Extensions\Yxl.Dapper.Extensions.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -1,15 +1,22 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Yxl.Dal.Aggregate;
 using Yxl.Dapper.Extensions.Attributes;
 
-namespace Yxl.Dal.MySql.Tests.Mock.Entity
+namespace Mock.Entitys
 {
-    [Table("role")]
-    public class RoleEntity : IEntity
+    [Table("user")]
+    public class UserEntity : IEntity
     {
         [Key, Column("id")]
         public Guid Id { get; set; }
+
+        [Column("login_name")]
+        public string LoginName { get; set; }
+
+        [Column("pwd")]
+        public string Password { get; set; }
 
         [Column("name")]
         public string Name { get; set; }

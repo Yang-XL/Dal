@@ -14,5 +14,9 @@
 
 /tests/*/bin
 /tests/*/obj
+
+/tests/Mock/*/bin
+/tests/Mock/*/obj
+
 /TestResults
 

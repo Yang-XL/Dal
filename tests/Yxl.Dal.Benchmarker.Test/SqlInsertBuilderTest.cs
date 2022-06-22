@@ -1,20 +1,19 @@
 ﻿using Mock.Entitys;
+using Yxl.Dapper.Extensions;
 using Yxl.Dapper.Extensions.SqlDialect;
 
-namespace Yxl.Dapper.Extensions.Tests
+namespace Yxl.Dal.Benchmarker.Test
 {
-    [TestClass]
     public class SqlInsertBuilderTest
     {
         private readonly ISqlDialect sqlDialect = new MySqlDialect();
 
-        [TestMethod]
         public void InsertTest()
         {
-            UserEntity userEntity = new()
+            UserEntity userEntity = new UserEntity
             {
                 Id = Guid.NewGuid(),
-                Name = "张"
+                Name = "Administrator"
             };
             var builder = new SqlInsertBuilder<UserEntity>(userEntity);
             var sqlWhere = builder.GetSql(sqlDialect);

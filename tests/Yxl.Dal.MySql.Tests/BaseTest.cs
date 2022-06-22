@@ -1,8 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Configuration.Json;
 using Microsoft.Extensions.DependencyInjection;
-using Yxl.Dal.MySql.Tests.Mock.Entity;
-using Yxl.Dal.Repository;
 
 namespace Yxl.Dal.MySql.Tests
 {
@@ -17,11 +15,13 @@ namespace Yxl.Dal.MySql.Tests
         {
             await Task.Run(() =>
             {
+                context.WriteLine("AssemblyInit Begin");
                 var _services = new ServiceCollection();
                 var config = new ConfigurationBuilder().Add(new JsonConfigurationSource { Path = "appsettings.json", ReloadOnChange = true }).Build();
                 _services.AddSingleton(config);
                 _services.AddMysqlDal(config.GetConnectionString("yxl_mysql"));
                 serviceProvider = _services.BuildServiceProvider();
+                context.WriteLine("AssemblyInit End");
             });
         }
     }

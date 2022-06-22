@@ -1,14 +1,16 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Yxl.Dal.Aggregate;
 using Yxl.Dapper.Extensions.Attributes;
+using Yxl.Dapper.Extensions.Enum;
 
-namespace Yxl.Dal.MySql.Tests.Mock.Entity
+namespace Mock.Entitys
 {
     [Table("member")]
     public class MemberEntity : IEntity
     {
-        [Key, Column("id"), Dapper.Extensions.Attributes.Ignore(Dapper.Extensions.Enum.IgnoreEnum.Insert)]
+        [Key, Column("id"), Ignore(IgnoreEnum.Insert)]
         public long Id { get; set; }
 
         [Column("login_name")]
