@@ -7,6 +7,7 @@ using Yxl.Dapper.Extensions.Core;
 using Yxl.Dapper.Extensions.Metadata;
 using Yxl.Dapper.Extensions.SqlDialect;
 using Yxl.Dapper.Extensions.Uitls;
+using Yxl.Dapper.Extensions.Uitls.ExpressionsTree;
 using Yxl.Dapper.Extensions.Wrapper.Impl;
 
 namespace Yxl.Dapper.Extensions
@@ -38,5 +39,40 @@ namespace Yxl.Dapper.Extensions
 
 
 
+
     }
+
+    public class SqlWhereLambdaBuilder<T> : ISqlBuilder
+    {
+        public LambdaExpression? Lambda { get; private set; }
+
+        public string? Alias { get; private set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public SqlWhereLambdaBuilder<T> TableAlias(string alias)
+        {
+            Alias = alias;
+            return this;
+        }
+
+        public SqlWhereLambdaBuilder<T> Where(Expression<Func<T, bool>> predicate)
+        {
+            Lambda = predicate;
+            return this;
+        }
+
+        public SqlInfo GetSql(ISqlDialect sqlDialect)
+        {
+            if (Lambda != null)
+            {
+                var where = new WhereExpression(Lambda, Alias, sqlDialect);
+                return where.Sql;
+            }
+            return new SqlInfo();
+        }
+    }
+
+
 }

@@ -17,6 +17,8 @@ namespace Mock.Entitys
 
         [Column("pwd")]
         public string Password { get; set; }
+        [Column("age"),Ignore]
+        public int Age { get; set; }
 
         [Column("name")]
         public string Name { get; set; }

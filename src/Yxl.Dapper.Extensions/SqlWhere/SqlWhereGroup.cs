@@ -31,23 +31,25 @@ namespace Yxl.Dapper.Extensions.SqlWhere
 
         public SqlInfo GetSql(ISqlDialect sqlDialect, ref IList<Parameter> parameters)
         {
-            StringBuilder sb = new StringBuilder();
+            SqlInfo sqlInfo = new SqlInfo();
             foreach (var item in Wheres)
             {
-                SqlInfo sqlInfo = item.GetSql(sqlDialect, ref parameters);
-                if (sb.Length > 0)
+                SqlInfo sqlWhereItemOrGroup = item.GetSql(sqlDialect, ref parameters);
+                if (sqlInfo.Sql.Length > 0 )
                 {
-                    sb.Append((item as ISqlWhereGroup).Operator.ToSql());
+                    sqlInfo.Append((item as ISqlWhereGroup).Operator.ToSql());
                 }
                 if (item is ISqlWhereGroup op && op.Wheres.Count > 1)
                 {
-                    sb.AppendFormat("({0})", sqlInfo.Sql);
+                    sqlInfo.Append("(");
+                    sqlInfo.Append(sqlWhereItemOrGroup);
+                    sqlInfo.Append(")");
                     continue;
                 }
-                sb.Append(sqlInfo.Sql);
+                sqlInfo.Append(sqlWhereItemOrGroup);
             }
 
-            return new SqlInfo(sb.ToString(), parameters);
+            return sqlInfo;
         }
     }
 }

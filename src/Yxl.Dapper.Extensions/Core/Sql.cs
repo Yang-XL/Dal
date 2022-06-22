@@ -35,6 +35,11 @@ namespace Yxl.Dapper.Extensions.Core
             Parameters.AddRange(parameter);
         }
 
+        public void AddParameter(string key, object val)
+        {
+            Parameters.Add(new Parameter(key, val));
+        }
+
 
         public void AddParameter(IEnumerable<Parameter> parameters)
         {
@@ -67,10 +72,12 @@ namespace Yxl.Dapper.Extensions.Core
             return this;
         }
 
-        public SqlInfo Append(string sql)
+        public SqlInfo Append(params string[] sql)
         {
-            if (string.IsNullOrWhiteSpace(sql)) return this;
-            Sql.AppendFormat(" {0}", sql);
+            foreach (string s in sql)
+            {
+                Sql.AppendFormat(" {0}", s);
+            }
             return this;
         }
 

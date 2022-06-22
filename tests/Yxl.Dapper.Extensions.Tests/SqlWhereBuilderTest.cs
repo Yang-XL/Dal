@@ -11,9 +11,20 @@ namespace Yxl.Dapper.Extensions.Tests
         [TestMethod]
         public void EqTest()
         {
+            var guid = Guid.NewGuid();
             var sqlWhereBuilder = new SqlWhereBuilder<UserEntity>();
-            sqlWhereBuilder.Eq(a => a.Id, "").And(a => a.Eq(b => b.Name, "张三").Or().Eq(b => b.Name, "李四"));
-            var sqlWhere = sqlWhereBuilder.GetSqlWhere(sqlDialect);
+            sqlWhereBuilder.Eq(a => a.Id, guid).And(a => a.Eq(b => b.Name, "张三").Or().Eq(b => b.Name, "李四"));
+            var sqlWhere = sqlWhereBuilder.GetSql(sqlDialect);
+            Console.WriteLine(sqlWhere.Sql);
+            sqlWhere.Parameters.ForEach(a => Console.WriteLine($"[{a.Name} : {a.Value}]"));
+        }
+        [TestMethod]
+        public void LambdEqTest()
+        {
+            var guid = Guid.NewGuid();
+            var sqlWhereBuilder = new SqlWhereLambdaBuilder<UserEntity>();
+            sqlWhereBuilder.Where(a => a.Id == guid && (a.Name == "张三" || a.Name == "李四"));
+            var sqlWhere = sqlWhereBuilder.GetSql(sqlDialect);
             Console.WriteLine(sqlWhere.Sql);
             sqlWhere.Parameters.ForEach(a => Console.WriteLine($"[{a.Name} : {a.Value}]"));
         }
