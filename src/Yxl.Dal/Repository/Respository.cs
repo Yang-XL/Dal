@@ -19,7 +19,7 @@ namespace Yxl.Dal.Repository
             {
                 if (sqlBuilder.IsQuery)
                 {
-                    var identity = connection.QueryFirst<object>(sqlInfo.Sql.ToString(), sqlInfo.GetDynamicParameters());
+                    var identity = connection.QueryFirstOrDefault<object>(sqlInfo.Sql.ToString(), sqlInfo.GetDynamicParameters());
                     return sqlBuilder.GetModesResutOfIdentity(identity);
                 }
                 connection.Execute(sqlInfo.Sql.ToString(), sqlInfo.GetDynamicParameters());
@@ -35,7 +35,7 @@ namespace Yxl.Dal.Repository
             {
                 if (sqlBuilder.IsQuery)
                 {
-                    var identity = await connection.QueryFirstAsync<object>(sqlInfo.Sql.ToString(), sqlInfo.GetDynamicParameters());
+                    var identity = await connection.QueryFirstOrDefaultAsync<object>(sqlInfo.Sql.ToString(), sqlInfo.GetDynamicParameters());
                     return sqlBuilder.GetModesResutOfIdentity(identity);
                 }
                 await connection.ExecuteAsync(sqlInfo.Sql.ToString(), sqlInfo.GetDynamicParameters());
@@ -79,18 +79,28 @@ namespace Yxl.Dal.Repository
         {
             var builder = new SqlDeleteBuilder<T>();
             builder.Where(where);
-            var sqlInfo = builder.GetSql(_sqlDialect);
-            using (var connection = OpenConnection())
-            {
-                return connection.Execute(sqlInfo.Sql.ToString(), sqlInfo.GetDynamicParameters());
-            }
+            return Delete(where);
         }
 
         public async Task<int> DeleteAsync(Action<SqlWhereBuilder<T>> where)
         {
             var builder = new SqlDeleteBuilder<T>();
             builder.Where(where);
-            var sqlInfo = builder.GetSql(_sqlDialect);
+            return await DeleteAsync(where);
+        }
+
+        public int Delete(SqlWhereBuilder<T> where)
+        {
+            var sqlInfo = where.GetSql(_sqlDialect);
+            using (var connection = OpenConnection())
+            {
+                return connection.Execute(sqlInfo.Sql.ToString(), sqlInfo.GetDynamicParameters());
+            }
+        }
+
+        public async Task<int> DeleteAsync(SqlWhereBuilder<T> where)
+        {
+            var sqlInfo = where.GetSql(_sqlDialect);
             using (var connection = await OpenConnectionAsync())
             {
                 return await connection.ExecuteAsync(sqlInfo.Sql.ToString(), sqlInfo.GetDynamicParameters());
@@ -142,44 +152,67 @@ namespace Yxl.Dal.Repository
         public async Task<IEnumerable<T>> QueryWhereAsync(Action<SqlWhereBuilder<T>> where)
         {
             var builder = new SqlQueryBuilder<T>().Where(where);
-            var sqlInfo = builder.GetSql(_sqlDialect);
-            using (var connection = await OpenConnectionAsync())
-            {
-                return await connection.QueryAsync<T>(sqlInfo.Sql.ToString(), sqlInfo.GetDynamicParameters());
-            }
+            return await QueryAsync(builder);
         }
 
         public IEnumerable<T> QueryWhere(Action<SqlWhereBuilder<T>> where)
         {
             var builder = new SqlQueryBuilder<T>().Where(where);
-            var sqlInfo = builder.GetSql(_sqlDialect);
-            using (var connection = OpenConnection())
-            {
-                return connection.Query<T>(sqlInfo.Sql.ToString(), sqlInfo.GetDynamicParameters());
-            }
+            return Query(builder);
         }
 
         public async Task<IEnumerable<T>> QueryAsync(Action<SqlQueryBuilder<T>> query)
         {
             var builder = new SqlQueryBuilder<T>();
             query(builder);
-            var sqlInfo = builder.GetSql(_sqlDialect);
-            using (var connection = await OpenConnectionAsync())
-            {
-                return await connection.QueryAsync<T>(sqlInfo.Sql.ToString(), sqlInfo.GetDynamicParameters());
-            }
+            return await QueryAsync(builder);
         }
 
         public IEnumerable<T> Query(Action<SqlQueryBuilder<T>> query)
         {
             var builder = new SqlQueryBuilder<T>();
             query(builder);
-            var sqlInfo = builder.GetSql(_sqlDialect);
+            return Query(builder);
+        }
+
+
+        public async Task<IEnumerable<T>> QueryWhereAsync(SqlWhereBuilder<T> where)
+        {
+            var sqlInfo = where.GetSql(_sqlDialect);
+            using (var connection = await OpenConnectionAsync())
+            {
+                return await connection.QueryAsync<T>(sqlInfo.Sql.ToString(), sqlInfo.GetDynamicParameters());
+            }
+        }
+
+        public IEnumerable<T> QueryWhere(SqlWhereBuilder<T> where)
+        {
+            var sqlInfo = where.GetSql(_sqlDialect);
             using (var connection = OpenConnection())
             {
                 return connection.Query<T>(sqlInfo.Sql.ToString(), sqlInfo.GetDynamicParameters());
             }
         }
+
+        public async Task<IEnumerable<T>> QueryAsync(SqlQueryBuilder<T> query)
+        {
+
+            var sqlInfo = query.GetSql(_sqlDialect);
+            using (var connection = await OpenConnectionAsync())
+            {
+                return await connection.QueryAsync<T>(sqlInfo.Sql.ToString(), sqlInfo.GetDynamicParameters());
+            }
+        }
+
+        public IEnumerable<T> Query(SqlQueryBuilder<T> query)
+        {
+            var sqlInfo = query.GetSql(_sqlDialect);
+            using (var connection = OpenConnection())
+            {
+                return connection.Query<T>(sqlInfo.Sql.ToString(), sqlInfo.GetDynamicParameters());
+            }
+        }
+
 
         public int Update(SqlUpdateBuilder<T> update)
         {

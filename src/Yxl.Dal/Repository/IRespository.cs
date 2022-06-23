@@ -28,6 +28,10 @@ namespace Yxl.Dal.Repository
 
         Task<int> DeleteAsync(Action<SqlWhereBuilder<T>> where);
 
+        int Delete(SqlWhereBuilder<T> where);
+
+        Task<int> DeleteAsync(SqlWhereBuilder<T> where);
+
         int DeleteById(object id);
 
         Task<int> DeleteByIdAsync(object id);
@@ -43,5 +47,13 @@ namespace Yxl.Dal.Repository
         Task<IEnumerable<T>> QueryAsync(Action<SqlQueryBuilder<T>> query);
 
         IEnumerable<T> Query(Action<SqlQueryBuilder<T>> query);
+
+        Task<IEnumerable<T>> QueryWhereAsync(SqlWhereBuilder<T> where);
+
+        IEnumerable<T> QueryWhere(SqlWhereBuilder<T> where);
+
+        Task<IEnumerable<T>> QueryAsync(SqlQueryBuilder<T> query);
+
+        IEnumerable<T> Query(SqlQueryBuilder<T> query);
     }
 }
