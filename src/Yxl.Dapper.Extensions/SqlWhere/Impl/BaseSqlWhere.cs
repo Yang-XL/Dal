@@ -55,7 +55,7 @@ namespace Yxl.Dapper.Extensions.SqlWhere.Impl
         /// <param name="index"></param>
         /// <returns></returns>
         protected virtual string GetParamName(ISqlDialect sqlDialect, object val, ref SqlInfo sqlWhereItem)
-        {
+        {            
             var key = $"{Filed.GetParameterName(sqlDialect)}_W";
             return sqlWhereItem.AddParameter(key, val);
         }

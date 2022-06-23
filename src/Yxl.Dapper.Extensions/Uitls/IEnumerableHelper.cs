@@ -3,12 +3,13 @@ using Yxl.Dapper.Extensions.SqlDialect;
 using System.Collections.Generic;
 using System.Text;
 using Yxl.Dapper.Extensions.Core;
+using System.Linq;
 
 namespace Yxl.Dapper.Extensions.Uitls
 {
     public static class IEnumerableHelper
     {
-        public static StringBuilder GetSqlWhere(this IEnumerable<IFiled> files, ISqlDialect sqlDialect)
+        public static StringBuilder GetSqlSelect(this IEnumerable<IFiled> files, ISqlDialect sqlDialect)
         {
             var sb = new StringBuilder();
             foreach (var item in files)
@@ -19,15 +20,16 @@ namespace Yxl.Dapper.Extensions.Uitls
             return sb;
         }
 
-        public static StringBuilder GetSqlSelect(this IEnumerable<IFiled> files, ISqlDialect sqlDialect)
+        public static void GetSqlSelect(this IEnumerable<IFiled> files, ISqlDialect sqlDialect, ref SqlInfo sql)
         {
-            var sb = new StringBuilder();
+            if (files == null || !files.Any()) sql.Append("*");
+            int i = 0;
             foreach (var item in files)
             {
-                if (sb.Length > 0) sb.Append(",");
-                sb.Append(item.GetSqlWhereColumnName(sqlDialect));
+                if (i > 0) sql.Append(",");
+                sql.Append(item.GetSqlWhereColumnName(sqlDialect));
+                i++;
             }
-            return sb;
         }
 
         public static StringBuilder GetSql(this IEnumerable<ISortFiled> files, ISqlDialect sqlDialect)

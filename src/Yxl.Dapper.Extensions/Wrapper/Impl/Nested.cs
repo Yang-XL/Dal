@@ -18,7 +18,7 @@ namespace Yxl.Dapper.Extensions.Wrapper.Impl
         {
             var newWrapper = new Children();
             action(newWrapper);
-            Group.Add(newWrapper.Group);
+            Group.Add(new SqlWhereGroup(newWrapper.Group, GroupOperator.And));
             return this as Children;
         }
 
@@ -32,7 +32,7 @@ namespace Yxl.Dapper.Extensions.Wrapper.Impl
 
         public Children Or()
         {
-            QueryOperator = GroupOperator.Or;
+            Group.Operator = GroupOperator.Or;
             return this as Children;
         }
 
@@ -43,8 +43,8 @@ namespace Yxl.Dapper.Extensions.Wrapper.Impl
 
         protected virtual Children AddSqlItem(ISqlWhere sqlItem)
         {
-            Group.Add(new SqlWhereGroup(sqlItem, QueryOperator));
-            QueryOperator = GroupOperator.And;
+            Group.Add(sqlItem);
+            //QueryOperator = GroupOperator.And;
             return this as Children;
         }
 

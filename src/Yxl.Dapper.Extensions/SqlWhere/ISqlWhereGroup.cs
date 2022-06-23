@@ -12,7 +12,7 @@ namespace Yxl.Dapper.Extensions.SqlWhere
         /// <summary>
         /// 
         /// </summary>
-        IList<ISqlWhere> Wheres { get; set; }
+        IList<ISqlWhere> WheresItems { get; set; }
         /// <summary>
         /// 
         /// </summary>

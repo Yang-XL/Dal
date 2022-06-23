@@ -96,6 +96,18 @@ namespace Yxl.Dapper.Extensions.Enum
             }
         }
 
+        public static bool IsNeedParam(this Operator op)
+        {
+            switch (op)
+            {
+                case Operator.Null:
+                case Operator.NotNull:
+                    return false;
+                default:
+                    return true;
+            }
+
+        }
 
         public static string GetStringFormat(this Operator op)
         {

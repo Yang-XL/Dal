@@ -8,32 +8,6 @@ namespace Yxl.Dapper.Extensions.Core
     public class SqlInfo
     {
 
-        public static SqlInfo SelectSqlInfo()
-        {
-            return new SqlInfo("SELECT ");
-        }        
-
-        public static SqlInfo UpdateSqlInfo()
-        {
-            return new SqlInfo("UPDATE ");
-        }
-
-        public static SqlInfo InsertSqlInfo()
-        {
-            return new SqlInfo("INSERT ");
-        }
-
-        public static SqlInfo FromSqlInfo()
-        {
-            return new SqlInfo(" FROM ");
-        }
-
-        public static SqlInfo WhereSqlInfo()
-        {
-            return new SqlInfo(" WHERE ");
-        }
-
-
         #region 构造函数
 
         public SqlInfo()
@@ -64,11 +38,17 @@ namespace Yxl.Dapper.Extensions.Core
 
         #endregion
 
-
+        /// <summary>
+        /// 防止重复添加key
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="val"></param>
+        /// <returns></returns>
         public string AddParameter(string key, object val)
         {
-            Parameters.Add(new Parameter(key, val));
-            return key;
+            var paramName = $"{key}{Parameters.Count}";
+            Parameters.Add(new Parameter(paramName, val));
+            return paramName;
         }
 
 

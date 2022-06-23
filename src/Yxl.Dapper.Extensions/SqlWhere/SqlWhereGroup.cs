@@ -12,11 +12,11 @@ namespace Yxl.Dapper.Extensions.SqlWhere
 
         public GroupOperator Operator { get; set; } = GroupOperator.And;
 
-        public IList<ISqlWhere> Wheres { get; set; } = new List<ISqlWhere>();
+        public IList<ISqlWhere> WheresItems { get; set; } = new List<ISqlWhere>();
 
         public ISqlWhereGroup Add(ISqlWhere sqlwhere)
         {
-            if (sqlwhere != null) { Wheres.Add(sqlwhere); };
+            if (sqlwhere != null) { WheresItems.Add(sqlwhere); };
             return this;
         }
 
@@ -31,18 +31,23 @@ namespace Yxl.Dapper.Extensions.SqlWhere
 
         public void GetSql(ISqlDialect sqlDialect, ref SqlInfo sqlWhere)
         {
-            if (sqlWhere.Sql.Length > 0)
+            int i = 0;
+            if (WheresItems.Count > 1)
             {
-                sqlWhere.Append(Operator.ToSql());
+                sqlWhere.Append("(");
             }
-            else
+            foreach (var item in WheresItems)
             {
-                foreach (var item in Wheres)
+                if (i > 0)
                 {
-                    sqlWhere.Append("(");
-                    item.GetSql(sqlDialect, ref sqlWhere);
-                    sqlWhere.Append(")");
+                    sqlWhere.Append(Operator.ToSql());
                 }
+                item.GetSql(sqlDialect, ref sqlWhere);
+                i++;
+            }
+            if (WheresItems.Count > 1)
+            {
+                sqlWhere.Append(")");
             }
 
         }
