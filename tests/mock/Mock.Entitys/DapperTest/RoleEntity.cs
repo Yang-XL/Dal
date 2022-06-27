@@ -4,21 +4,13 @@ using System.ComponentModel.DataAnnotations.Schema;
 using Yxl.Dal.Aggregate;
 using Yxl.Dapper.Extensions.Attributes;
 
-namespace Mock.Entitys
+namespace Mock.Entitys.DapperTest
 {
-    [Table("user")]
-    public class UserEntity : IEntity
+    [Table("role")]
+    public class RoleEntity : UserDbEntity
     {
         [Key, Column("id")]
         public Guid Id { get; set; }
-
-        [Column("login_name")]
-        public string LoginName { get; set; }
-
-        [Column("pwd")]
-        public string Password { get; set; }
-        [Column("age"),Ignore]
-        public int Age { get; set; }
 
         [Column("name")]
         public string Name { get; set; }

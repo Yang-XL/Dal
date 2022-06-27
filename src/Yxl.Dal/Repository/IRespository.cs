@@ -28,9 +28,9 @@ namespace Yxl.Dal.Repository
 
         Task<int> DeleteAsync(Action<SqlWhereBuilder<T>> where);
 
-        int Delete(SqlWhereBuilder<T> where);
+        int Delete(SqlDeleteBuilder<T> where);
 
-        Task<int> DeleteAsync(SqlWhereBuilder<T> where);
+        Task<int> DeleteAsync(SqlDeleteBuilder<T> where);
 
         int DeleteById(object id);
 

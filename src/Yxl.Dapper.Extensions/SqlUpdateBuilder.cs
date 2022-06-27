@@ -1,11 +1,11 @@
 ﻿using Yxl.Dapper.Extensions.Metadata;
 using Yxl.Dapper.Extensions.SqlDialect;
 using Yxl.Dapper.Extensions.Uitls;
-using System;
+using Yxl.Dapper.Extensions.Core;
 using System.Collections.Generic;
+using System;
 using System.Linq.Expressions;
 using System.Linq;
-using Yxl.Dapper.Extensions.Core;
 
 namespace Yxl.Dapper.Extensions
 {
@@ -14,7 +14,7 @@ namespace Yxl.Dapper.Extensions
     public class SqlUpdateBuilder<T> : ISqlBuilder
     {
         private readonly List<IUpdateFiled> _updateFiled;
-        private readonly SqlWhereBuilder<T> sqlWhereBuilder;
+        private SqlWhereBuilder<T> sqlWhereBuilder;
 
         private readonly ITable _updaeTable;
 
@@ -55,7 +55,7 @@ namespace Yxl.Dapper.Extensions
             sqlInfo.AddParameters(filedSql.Parameters);
             var sqlWhere = sqlWhereBuilder.GetSqlWhere(sqlDialect);
             sqlInfo.AppendSqlWhere(sqlWhere);
-           
+
             return sqlInfo;
         }
 
@@ -97,7 +97,7 @@ namespace Yxl.Dapper.Extensions
                 if (item.IgnoreUpdate) continue;
                 if (item.Key)
                 {
-                    sqlWhereBuilder.Eq(item, item.MetaData.GetValue(entity));
+                    sqlWhereBuilder = sqlWhereBuilder.Eq(item, item.MetaData.GetValue(entity));
                     continue;
                 }
                 if (item.LogicalDelete)
@@ -122,7 +122,6 @@ namespace Yxl.Dapper.Extensions
                 {
                     TryAddFile(item, false);
                 }
-
             }
             return this;
         }

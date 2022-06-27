@@ -26,6 +26,7 @@ namespace Yxl.Dapper.Extensions
             sqlUpdateBuilder = new SqlUpdateBuilder<T>();
 
         }
+
         public SqlDeleteBuilder<T> Where(Action<SqlWhereBuilder<T>> where)
         {
             if (logicalDelete)
@@ -46,7 +47,7 @@ namespace Yxl.Dapper.Extensions
             var sqlInfo = new SqlInfo();
             sqlInfo.Append($"DELETE FROM {table.GetTableName(sqlDialect)}");
             var sqlWhere = sqlWhereBuilder.GetSql(sqlDialect);
-            sqlInfo.Append(sqlWhere);
+            sqlInfo.AppendSqlWhere(sqlWhere);
             return sqlInfo;
         }
 
@@ -64,6 +65,7 @@ namespace Yxl.Dapper.Extensions
             }
             return this;
         }
+
         public SqlDeleteBuilder<T> DeleteById(object id)
         {
             if (logicalDelete)
@@ -72,10 +74,8 @@ namespace Yxl.Dapper.Extensions
                 return this;
             }
             var allFiles = typeof(T).CreateFiles();
-            foreach (var item in allFiles.Where(a => a.Key))
-            {
-                sqlWhereBuilder.Eq(item, id);
-            }
+            var item = allFiles.First(a => a.Key);
+            sqlWhereBuilder.Eq(item, id);
             return this;
         }
     }

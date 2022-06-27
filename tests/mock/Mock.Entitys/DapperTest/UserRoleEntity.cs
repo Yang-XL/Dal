@@ -4,21 +4,26 @@ using System.ComponentModel.DataAnnotations.Schema;
 using Yxl.Dal.Aggregate;
 using Yxl.Dapper.Extensions.Attributes;
 
-namespace Mock.Entitys
+namespace Mock.Entitys.DapperTest
 {
-    [Table("role")]
-    public class RoleEntity : IEntity
+    [Table("user_role")]
+    public class UserRoleEntity : UserDbEntity
     {
-        [Key, Column("id")]
+        [Key, Column("id"),]
         public Guid Id { get; set; }
 
-        [Column("name")]
-        public string Name { get; set; }
+        [Column("user_id")]
+        public Guid UserId { get; set; }
+
+        [Column("role_id")]
+        public Guid RoleId { get; set; }
 
         [Column("create_at"), CreateAt]
         public DateTime? Created { get; set; }
 
         [Column("update_at"), UpdatedAt]
         public DateTime? Updated { get; set; }
+
+
     }
 }

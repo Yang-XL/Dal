@@ -27,11 +27,11 @@ namespace Yxl.Dapper.Extensions.Metadata
 
         public SqlInfo GetSql(ISqlDialect sqlDialect)
         {
-            var parameterName = $"{sqlDialect.ParameterPrefix}U_{Filed.Name}";
-            var sql = $"{Filed.Name}={parameterName}";
-            var result = new SqlInfo(sql);
-            result.AddParameter(parameterName, Value);
-            return result;
+            var sqlInfo = new SqlInfo();
+            var parameterName = $"{sqlDialect.ParameterPrefix}{Filed.Name}_U";
+            var sql = $"{Filed.Name}={sqlInfo.AddParameter(parameterName, Value)}";
+            sqlInfo.Append(sql);
+            return sqlInfo;
         }
 
     }

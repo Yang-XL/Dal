@@ -1,4 +1,4 @@
-﻿using Mock.Entitys;
+﻿using Mock.Entitys.DapperTest;
 using Yxl.Dapper.Extensions;
 using Yxl.Dapper.Extensions.SqlDialect;
 

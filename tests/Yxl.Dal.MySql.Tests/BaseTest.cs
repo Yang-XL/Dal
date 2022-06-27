@@ -19,7 +19,8 @@ namespace Yxl.Dal.MySql.Tests
                 var _services = new ServiceCollection();
                 var config = new ConfigurationBuilder().Add(new JsonConfigurationSource { Path = "appsettings.json", ReloadOnChange = true }).Build();
                 _services.AddSingleton(config);
-                _services.AddMysqlDal(config.GetConnectionString("yxl_mysql"));
+                _services.AddMysqlDal("dapper_test", config.GetConnectionString("dapper_test"));
+                _services.AddMysqlDal("dapper_test_order", config.GetConnectionString("dapper_test_order"));
                 serviceProvider = _services.BuildServiceProvider();
                 context.WriteLine("AssemblyInit End");
             });

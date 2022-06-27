@@ -1,4 +1,4 @@
-﻿using Mock.Entitys;
+﻿using Mock.Entitys.DapperTest;
 using System;
 using System.Collections.Generic;
 using System.Linq;

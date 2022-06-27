@@ -68,13 +68,12 @@ namespace Yxl.Dapper.Extensions.Core
 
         public SqlInfo AppendSqlWhere(SqlInfo sqlWhere)
         {
-            if (sqlWhere == null) return this;
-
-            if (sqlWhere.Sql.Length <= 0)
+            if (sqlWhere == null || sqlWhere.Sql?.Length <= 0)
             {
-                sqlWhere.Append($" WHERE");
+                return this;
             }
-            sqlWhere.Append(sqlWhere);
+            Append($" WHERE");
+            Append(sqlWhere);
             return this;
         }
 

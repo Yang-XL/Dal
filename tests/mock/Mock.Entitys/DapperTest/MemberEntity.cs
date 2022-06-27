@@ -5,10 +5,10 @@ using Yxl.Dal.Aggregate;
 using Yxl.Dapper.Extensions.Attributes;
 using Yxl.Dapper.Extensions.Enum;
 
-namespace Mock.Entitys
+namespace Mock.Entitys.DapperTest
 {
     [Table("member")]
-    public class MemberEntity : IEntity
+    public class MemberEntity : UserDbEntity
     {
         [Key, Column("id"), Ignore(IgnoreEnum.Insert)]
         public long Id { get; set; }

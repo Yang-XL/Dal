@@ -31,23 +31,7 @@ namespace Yxl.Dapper.Extensions.SqlWhere.Impl
         /// <param name="parameters"></param>
         /// <returns></returns>
         public abstract void GetSql(ISqlDialect sqlDialect, ref SqlInfo sqlWhere);
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="parameters"></param>
-        /// <param name="index"></param>
-        /// <returns></returns>
-        protected virtual string GetParamName(ISqlDialect sqlDialect, ref IList<Parameter> parameters, int index = 1)
-        {
-            var key = $"{Filed.GetParameterName(sqlDialect)}_W_{index}";
-            if (parameters.FirstOrDefault(a => a.Name == key) == null)
-            {
-                return key;
-            }
-            index++;
-            return GetParamName(sqlDialect, ref parameters, index);
-        }
-
+     
         /// <summary>
         /// 
         /// </summary>

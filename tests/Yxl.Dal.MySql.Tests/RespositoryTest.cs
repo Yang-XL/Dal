@@ -1,5 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using Mock.Entitys;
+using Mock.Entitys.DapperTest;
 using Yxl.Dal.Repository;
 using Yxl.Dapper.Extensions;
 

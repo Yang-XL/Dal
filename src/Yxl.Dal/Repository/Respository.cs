@@ -79,17 +79,19 @@ namespace Yxl.Dal.Repository
         {
             var builder = new SqlDeleteBuilder<T>();
             builder.Where(where);
-            return Delete(where);
+            return Delete(builder);
         }
 
         public async Task<int> DeleteAsync(Action<SqlWhereBuilder<T>> where)
         {
             var builder = new SqlDeleteBuilder<T>();
             builder.Where(where);
-            return await DeleteAsync(where);
+            return await DeleteAsync(builder);
         }
 
-        public int Delete(SqlWhereBuilder<T> where)
+
+
+        public int Delete(SqlDeleteBuilder<T> where)
         {
             var sqlInfo = where.GetSql(_sqlDialect);
             using (var connection = OpenConnection())
@@ -97,8 +99,10 @@ namespace Yxl.Dal.Repository
                 return connection.Execute(sqlInfo.Sql.ToString(), sqlInfo.GetDynamicParameters());
             }
         }
+    
 
-        public async Task<int> DeleteAsync(SqlWhereBuilder<T> where)
+
+        public async Task<int> DeleteAsync(SqlDeleteBuilder<T> where)
         {
             var sqlInfo = where.GetSql(_sqlDialect);
             using (var connection = await OpenConnectionAsync())
@@ -111,22 +115,14 @@ namespace Yxl.Dal.Repository
         {
             var builder = new SqlDeleteBuilder<T>();
             builder.DeleteById(id);
-            var sqlInfo = builder.GetSql(_sqlDialect);
-            using (var connection = OpenConnection())
-            {
-                return connection.Execute(sqlInfo.Sql.ToString(), sqlInfo.GetDynamicParameters());
-            }
+            return Delete(builder);
         }
 
         public async Task<int> DeleteByIdAsync(object id)
         {
             var builder = new SqlDeleteBuilder<T>();
             builder.DeleteById(id);
-            var sqlInfo = builder.GetSql(_sqlDialect);
-            using (var connection = await OpenConnectionAsync())
-            {
-                return await connection.ExecuteAsync(sqlInfo.Sql.ToString(), sqlInfo.GetDynamicParameters());
-            }
+            return await DeleteAsync(builder);
         }
 
         public T GetById(object id)
