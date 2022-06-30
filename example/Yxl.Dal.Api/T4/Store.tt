@@ -1,0 +1,694 @@
+<#@ assembly name="System.Core.dll" #>
+<#@ assembly name="System.Data.dll" #>
+<#@ assembly name="System.Data.DataSetExtensions.dll" #>
+<#@ assembly name="System.Xml.dll" #>
+<#@ assembly name="$(ProjectDir)\T4\lib\MySqlConnector.dll" #>
+<#@ assembly name="System.Data.Common.dll" #>
+<#@ assembly name="netstandard, Version=2.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51" #>
+<#@ import namespace="System" #>
+<#@ import namespace="System.Xml" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Linq.Expressions" #>
+<#@ import namespace="System.Data.SqlClient" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="System.IO" #>
+<#@ import namespace="MySqlConnector"#>
+
+<#@ import namespace="System.Globalization" #>
+<#+
+	public static class Until
+    {
+        public static Config DbConfig = new Config
+        {
+            NameSpace = "Yxl.Dal",
+            DbName = "Test",
+            ConnectionString = "server=localhost;port=3306;user=root;password=123456; database=dapper_test;pooling=true;min pool size=5;max pool size=100;connect timeout = 20;",
+            DbType = "MYSQL"
+        };
+               
+
+        public static DataBaseInfo GetDataBase()
+        {
+            switch (DbConfig.DbType)
+            {
+                case "MYSQL":
+                    return MySqlUntil.GetDataBase(DbConfig.ConnectionString);
+                case "MSSQLSERVER":
+                    return SqlServerUntil.GetDataBase(DbConfig.ConnectionString);
+                default:
+                    return MySqlUntil.GetDataBase(DbConfig.ConnectionString);
+            }
+        }
+
+        public static string NameFormatter(string name)
+        {
+            var result = "";
+            foreach (var item in name.Split('_'))
+            {
+                result = result + CultureInfo.CurrentCulture.TextInfo.ToTitleCase(item.ToLower());
+            }
+            return result;    
+
+        }
+    }
+
+    public class Config
+    {
+        public string NameSpace { get; set; } = "";
+
+        public string DbName { get; set; } = "";
+
+        public string ConnectionString { get; set; } = "";
+
+        /// <summary>
+        /// MYSQL OR MSSQL
+        /// </summary>
+        public string DbType { get; set; } = "MYSQL";
+    }
+
+    public static class MySqlUntil
+    {
+        public static DataBaseInfo GetDataBase(string connectionString)
+        {
+            var tables = GetTables(connectionString);
+            foreach (var item in tables)
+            {
+                item.Columns = GetDbColumns(connectionString, item);
+            }
+            return new DataBaseInfo()
+            {
+                Tables = tables
+            };
+        }
+
+        private static List<TableInfo> GetTables(string connectionString)
+        {
+
+            var sql = @"SELECT
+	                        create_time,
+	                        update_time ,
+	                        table_name,
+	                        table_schema,
+	                        table_comment
+                        FROM
+	                        information_schema.TABLES 
+                        WHERE
+	                        table_schema = (SELECT DATABASE()) 
+                        ORDER BY
+	                        create_time DESC";
+
+            var result = new List<TableInfo>();
+
+            using (var connection = new MySqlConnection(connectionString))
+            {
+                connection.Open();
+
+                MySqlCommand command = connection.CreateCommand();
+                command.CommandText = string.Format(sql, connection.Database);
+
+                using (MySqlDataReader reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        var table = new TableInfo
+                        {
+                            CreateAt = reader.IsDBNull(0) ? "" : reader.GetFieldValue<DateTime>(0).ToString("yyyy-MM-dd HH:mm:ss"),
+                            ModifyAt = reader.IsDBNull(1) ? "" : reader.GetFieldValue<DateTime>(1).ToString("yyyy-MM-dd HH:mm:ss"),
+                            TableName = reader.IsDBNull(2) ? "" : reader.GetFieldValue<string>(2),
+                            SchemName = reader.IsDBNull(3) ? "" : reader.GetFieldValue<string>(3),
+                            Description = reader.IsDBNull(4) ? "" : reader.GetFieldValue<string>(4),
+                            DataBaseName = connection.Database.ToString(),
+                        };
+                        result.Add(table);
+                    }
+                    reader.Close();
+                }
+                connection.Close();
+                return result;
+            }
+        }
+
+        private static List<ColumnInfo> GetDbColumns(string connectionString, TableInfo tableInfo)
+        {
+
+            var sql = @"SELECT
+	                        Ordinal_position as ColumnID,
+	                        Column_key as KeyType,
+	                        COLUMN_NAME as ColumnName,
+	                        Data_TYPE as ColumnType,
+	                        EXTRA as IsIdentity,
+	                        CHARACTER_MAXIMUM_LENGTH as ByteLength,
+	                        IS_NULLABLE as IsNullable,
+	                        COLUMN_COMMENT as Remark
+                        FROM
+	                        information_schema.COLUMNS 
+                        WHERE
+	                        table_schema = '{0}'
+	                        AND Table_name = '{1}';";
+
+
+            var result = new List<ColumnInfo>();
+
+            using (MySqlConnection connection = new MySqlConnection(connectionString))
+            {
+                connection.Open();
+                MySqlCommand command = connection.CreateCommand();
+                command.CommandText = string.Format(sql, tableInfo.DataBaseName, tableInfo.TableName);
+                using (MySqlDataReader reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        var table = new MysqlColumnInfo
+                        {
+                            ColumnID = reader.IsDBNull(0) ? 0 : reader.GetFieldValue<int>(0),
+                            IsPrimaryKey = !reader.IsDBNull(1) && string.Equals(reader.GetFieldValue<string>(1), "PRI", StringComparison.OrdinalIgnoreCase),
+                            ColumnName = reader.IsDBNull(2) ? "" : reader.GetFieldValue<string>(2),
+                            ColumnType = reader.IsDBNull(3) ? "" : reader.GetFieldValue<string>(3),
+                            IsIdentity = !reader.IsDBNull(4) && string.Equals(reader.GetFieldValue<string>(4), "auto_increment", StringComparison.OrdinalIgnoreCase),
+                            ByteLength = reader.IsDBNull(5) ? 100 : reader.GetFieldValue<int>(5),
+                            IsNullable = !reader.IsDBNull(6) && string.Equals(reader.GetFieldValue<string>(6), "YES", StringComparison.OrdinalIgnoreCase),
+                            Remark = reader.IsDBNull(7) ? "" : reader.GetFieldValue<string>(7)
+                        };
+                        result.Add(table);
+                    }
+                    reader.Close();
+                }
+                connection.Close();
+                return result;
+            }
+        }
+    }
+
+    public static class SqlServerUntil
+    {
+
+        public static DataBaseInfo GetDataBase(string connectionString)
+        {
+            var tables = GetTables(connectionString);
+            foreach (var item in tables)
+            {
+                item.Columns = GetDbColumns(connectionString, item);
+            }
+            return new DataBaseInfo()
+            {
+                Tables = tables
+            };
+        }
+
+        private static List<TableInfo> GetTables(string connectionString)
+        {
+            var sql = @"SELECT
+                            obj.create_date as CreateAt,
+                            obj.modify_date as ModifyAt,
+	                        obj.name TableName,
+	                        schem.name SchemName ,
+	                        ep.value AS [Description]
+                        FROM
+	                        [{0}].sys.objects obj
+	                        INNER JOIN [{0}].dbo.sysindexes idx ON obj.object_id = idx.id AND idx.indid<= 1
+	                        INNER JOIN [{0}].sys.schemas schem ON obj.schema_id = schem.schema_id 
+	                        LEFT OUTER JOIN [{0}].sys.extended_properties ep ON obj.object_id = ep.major_id AND ep.minor_id= 0 	AND ep.name= 'MS_Description' 
+                        WHERE
+	                        type = 'U' 
+                        ORDER BY
+	                        obj.name";
+
+            var result = new List<TableInfo>();
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                SqlCommand command = connection.CreateCommand();
+                command.CommandText = string.Format(sql, connection.Database);
+
+                using (SqlDataReader reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        var table = new TableInfo
+                        {
+                            CreateAt = reader.IsDBNull(0) ? "" : reader.GetFieldValue<DateTime>(0).ToString("yyyy-MM-dd HH:mm:ss"),
+                            ModifyAt = reader.IsDBNull(1) ? "" : reader.GetFieldValue<DateTime>(1).ToString("yyyy-MM-dd HH:mm:ss"),
+                            TableName = reader.IsDBNull(2) ? "" : reader.GetFieldValue<string>(2),
+                            SchemName = reader.IsDBNull(3) ? "" : reader.GetFieldValue<string>(3),
+                            Description = reader.IsDBNull(4) ? "" : reader.GetFieldValue<string>(4),
+                            DataBaseName = connection.Database.ToString(),
+                        };
+                        result.Add(table);
+                    }
+                    reader.Close();
+                }
+                connection.Close();
+                return result;
+            }
+        }
+
+        private static List<ColumnInfo> GetDbColumns(string connectionString, TableInfo tableInfo)
+        {
+
+            var sql = @"WITH indexCTE AS (
+	                    SELECT
+		                    ic.column_id,
+		                    ic.index_column_id,
+		                    ic.object_id 
+	                    FROM
+		                    [{0}].sys.indexes idx
+		                    INNER JOIN [{0}].sys.index_columns ic ON idx.index_id = ic.index_id 
+		                    AND idx.object_id = ic.object_id 
+	                    WHERE
+		                    idx.object_id = OBJECT_ID( @TableName ) 
+		                    AND idx.is_primary_key= 1 
+	                    ) SELECT
+	                    colm.column_id ColumnID,
+	                    CAST ( CASE WHEN indexCTE.column_id IS NULL THEN 0 ELSE 1 END AS BIT ) IsPrimaryKey,
+	                    colm.name ColumnName,
+	                    systype.name ColumnType,
+	                    colm.is_identity IsIdentity,
+	                    colm.is_nullable IsNullable,
+	                    CAST ( colm.max_length AS INT ) ByteLength,
+	                    (
+	                    CASE
+			
+			                    WHEN systype.name= 'nvarchar' 
+			                    AND colm.max_length> 0 THEN
+				                    colm.max_length/ 2 
+				                    WHEN systype.name= 'nchar' 
+				                    AND colm.max_length> 0 THEN
+					                    colm.max_length/ 2 
+					                    WHEN systype.name= 'ntext' 
+					                    AND colm.max_length> 0 THEN
+						                    colm.max_length/ 2 ELSE colm.max_length 
+					                    END 
+					                    ) CharLength,
+					                    CAST ( colm.precision AS INT ) PRECISION,
+					                    CAST ( colm.scale AS INT ) Scale,
+					                    prop.value Remark 
+				                    FROM
+					                    [{0}].sys.columns colm
+					                    INNER JOIN [{0}].sys.types systype ON colm.system_type_id= systype.system_type_id 
+					                    AND colm.user_type_id= systype.user_type_id
+					                    LEFT JOIN [{0}].sys.extended_properties prop ON colm.object_id = prop.major_id 
+					                    AND colm.column_id= prop.minor_id
+					                    LEFT JOIN indexCTE ON colm.column_id= indexCTE.column_id 
+					                    AND colm.object_id = indexCTE.object_id 
+				                    WHERE
+					                    colm.object_id = OBJECT_ID( @TableName ) 
+			                    ORDER BY
+	                    colm.column_id";
+
+
+
+
+
+            SqlParameter param = new SqlParameter("@TableName", $"[{tableInfo.DataBaseName}].{tableInfo.SchemName}.[{tableInfo.TableName}]");
+
+            var result = new List<ColumnInfo>();
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                SqlCommand command = connection.CreateCommand();
+                command.CommandText = string.Format(sql, tableInfo.DataBaseName); ;
+                command.Parameters.Add(param);
+                using (SqlDataReader reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        var table = new ColumnInfo
+                        {
+                            ColumnID = reader.IsDBNull(0) ? 0 : reader.GetFieldValue<int>(0),
+                            IsPrimaryKey = reader.IsDBNull(1) ? false : reader.GetFieldValue<bool>(1),
+                            ColumnName = reader.IsDBNull(2) ? "" : reader.GetFieldValue<string>(2),
+                            ColumnType = reader.IsDBNull(3) ? "" : reader.GetFieldValue<string>(3),
+                            IsIdentity = reader.IsDBNull(4) ? false : reader.GetFieldValue<bool>(4),
+                            IsNullable = reader.IsDBNull(5) ? false : reader.GetFieldValue<bool>(5),
+                            ByteLength = reader.IsDBNull(6) ? 0 : reader.GetFieldValue<int>(6),
+                            CharLength = reader.IsDBNull(7) ? 0 : reader.GetFieldValue<int>(7),
+                            Scale = reader.IsDBNull(9) ? 0 : reader.GetFieldValue<int>(9),
+                            Remark = reader.IsDBNull(10) ? "" : reader.GetFieldValue<string>(10)
+                        };
+                        result.Add(table);
+                    }
+                    reader.Close();
+                }
+                connection.Close();
+                return result;
+            }
+        }
+
+    }
+
+    public class DataBaseInfo
+    {
+        public List<TableInfo> Tables { get; set; }
+    }
+
+    public class TableInfo
+    {
+        public string TableName { get; set; }
+
+        public string ClassName
+        {
+            get
+            {
+                return Until.NameFormatter(TableName);
+            }
+        }
+
+        public string SchemName { get; set; }
+
+        public string Description { get; set; }
+
+        public string DataBaseName { get; set; }
+
+        public string DBName
+        {
+            get
+            {
+                return Until.NameFormatter(DataBaseName);
+            }
+        }
+
+        public string CreateAt { get; set; }
+
+        public string ModifyAt { get; set; }
+
+        public List<ColumnInfo> Columns { get; set; }
+
+
+
+
+        public string T4EntityFileFullPath
+        {
+            get
+            {
+                return $"Entity\\{DBName}\\{ClassName}Entity.cs";
+            }
+        }
+        public string T4EntityClassName
+        {
+            get
+            {
+                return $"{ClassName}Entity";
+            }
+        }
+        public string T4EntityNameSpace
+        {
+            get
+            {
+                return $"Entity.{DBName}";
+            }
+        }
+
+        public string T4RepositoryInterfaceFileFullPath
+        {
+            get
+            {
+                return $"Repository\\{DBName}\\I{ClassName}Repository.cs";
+            }
+        }
+        public string T4RepositoryInterfaceName
+        {
+            get
+            {
+                return $"I{ClassName}Repository";
+            }
+        }
+        public string T4RepositoryInterfaceNameSpace
+        {
+            get
+            {
+                return $"Repository.{DBName}";
+            }
+        }
+
+        public string T4RepositoryFileFullPath
+        {
+            get
+            {
+                return $"Repository\\Impl\\{DBName}\\{ClassName}Repository.cs";
+            }
+        }
+        public string T4RepositoryClassName
+        {
+            get
+            {
+                return $"{ClassName}Repository";
+            }
+        }
+        public string T4RepositoryNameSpace
+        {
+            get
+            {
+                return $"Repository.{DBName}.Impl";
+            }
+        }
+
+
+    }
+
+    public class ColumnInfo
+    {
+        /// <summary>
+        /// 字段ID
+        /// </summary>
+        public int ColumnID { get; set; }
+
+        /// <summary>
+        /// 是否主键
+        /// </summary>
+        public bool IsPrimaryKey { get; set; }
+
+        /// <summary>
+        /// 字段名称
+        /// </summary>
+        public string ColumnName { get; set; }
+
+        public string FiledName
+        {
+            get
+            {
+                return Until.NameFormatter(ColumnName);
+            }
+        }
+
+        /// <summary>
+        /// 字段类型
+        /// </summary>
+        public string ColumnType { get; set; }
+
+        /// <summary>
+        /// 数据库类型对应的C#类型
+        /// </summary>
+        public string CSharpType
+        {
+            get
+            {
+                var r = MapCsharpType();
+                if (IsNullable && CommonType.IsValueType)
+                {
+                    return r + "?";
+                }
+                return r;
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public Type CommonType
+        {
+            get
+            {
+                return MapCommonType(ColumnType);
+            }
+        }
+
+        /// <summary>
+        /// 字节长度
+        /// </summary>
+        public int ByteLength { get; set; }
+
+        /// <summary>
+        /// 字符长度
+        /// </summary>
+        public int CharLength { get; set; }
+
+        /// <summary>
+        /// 小数位
+        /// </summary>
+        public int Scale { get; set; }
+
+        /// <summary>
+        /// 是否自增列
+        /// </summary>
+        public bool IsIdentity { get; set; }
+
+        /// <summary>
+        /// 是否允许空
+        /// </summary>
+        public bool IsNullable { get; set; }
+
+
+
+        /// <summary>
+        /// 描述
+        /// </summary>
+        public string Remark { get; set; }
+
+
+        public virtual string MapCsharpType()
+        {
+            if (string.IsNullOrEmpty(ColumnType)) return ColumnType;
+            var columnType = ColumnType.ToLower();
+            string csharpType;
+            switch (columnType)
+            {
+                case "bigint": csharpType = "long"; break;
+                case "binary": csharpType = "byte[]"; break;
+                case "bit": csharpType = "bool"; break;
+                case "char": csharpType = "string"; break;
+                case "date": csharpType = "DateTime"; break;
+                case "datetime": csharpType = "DateTime"; break;
+                case "datetime2": csharpType = "DateTime"; break;
+                case "datetimeoffset": csharpType = "DateTimeOffset"; break;
+                case "decimal": csharpType = "decimal"; break;
+                case "float": csharpType = "double"; break;
+                case "image": csharpType = "byte[]"; break;
+                case "int": csharpType = "int"; break;
+                case "money": csharpType = "decimal"; break;
+                case "nchar": csharpType = "string"; break;
+                case "ntext": csharpType = "string"; break;
+                case "numeric": csharpType = "decimal"; break;
+                case "nvarchar": csharpType = "string"; break;
+                case "real": csharpType = "Single"; break;
+                case "smalldatetime": csharpType = "DateTime"; break;
+                case "smallint": csharpType = "short"; break;
+                case "smallmoney": csharpType = "decimal"; break;
+                case "sql_variant": csharpType = "object"; break;
+                case "sysname": csharpType = "object"; break;
+                case "text": csharpType = "string"; break;
+                case "time": csharpType = "TimeSpan"; break;
+                case "timestamp": csharpType = "byte[]"; break;
+                case "tinyint": csharpType = "byte"; break;
+                case "uniqueidentifier": csharpType = "Guid"; break;
+                case "varbinary": csharpType = "byte[]"; break;
+                case "varchar": csharpType = "string"; break;
+                case "xml": csharpType = "string"; break;
+                default: csharpType = "object"; break;
+            }
+            return csharpType;
+        }
+
+        public virtual Type MapCommonType(string dbtype)
+        {
+            if (string.IsNullOrEmpty(dbtype)) return Type.Missing.GetType();
+            dbtype = dbtype.ToLower();
+            Type commonType = typeof(object);
+            switch (dbtype)
+            {
+                case "bigint": commonType = typeof(long); break;
+                case "binary": commonType = typeof(byte[]); break;
+                case "bit": commonType = typeof(bool); break;
+                case "char": commonType = typeof(string); break;
+                case "date": commonType = typeof(DateTime); break;
+                case "datetime": commonType = typeof(DateTime); break;
+                case "datetime2": commonType = typeof(DateTime); break;
+                case "datetimeoffset": commonType = typeof(DateTimeOffset); break;
+                case "decimal": commonType = typeof(decimal); break;
+                case "float": commonType = typeof(double); break;
+                case "image": commonType = typeof(byte[]); break;
+                case "int": commonType = typeof(int); break;
+                case "money": commonType = typeof(decimal); break;
+                case "nchar": commonType = typeof(string); break;
+                case "ntext": commonType = typeof(string); break;
+                case "numeric": commonType = typeof(decimal); break;
+                case "nvarchar": commonType = typeof(string); break;
+                case "real": commonType = typeof(Single); break;
+                case "smalldatetime": commonType = typeof(DateTime); break;
+                case "smallint": commonType = typeof(short); break;
+                case "smallmoney": commonType = typeof(decimal); break;
+                case "sql_variant": commonType = typeof(object); break;
+                case "sysname": commonType = typeof(object); break;
+                case "text": commonType = typeof(string); break;
+                case "time": commonType = typeof(TimeSpan); break;
+                case "timestamp": commonType = typeof(byte[]); break;
+                case "tinyint": commonType = typeof(byte); break;
+                case "uniqueidentifier": commonType = typeof(Guid); break;
+                case "varbinary": commonType = typeof(byte[]); break;
+                case "varchar": commonType = typeof(string); break;
+                case "xml": commonType = typeof(string); break;
+                default: commonType = typeof(object); break;
+            }
+            return commonType;
+        }
+
+
+    }
+
+    public class MysqlColumnInfo : ColumnInfo
+    {
+        public override string MapCsharpType()
+        {
+            if (string.IsNullOrEmpty(ColumnType)) return ColumnType;
+            var columnType = ColumnType.ToLower();
+            string csharpType = "object";
+            switch (columnType)
+            {
+                case "bigint":
+                    return "long";
+                case "tinyint":
+                case "smallint":
+                case "mediumint":
+                case "int":
+                case "integer":
+                    return "int";
+                case "double":
+                    return "double";
+                case "float":
+                    return "float";
+                case "decimal":
+                    return "decimal";
+                case "numeric":
+                case "real":
+                    return "decimal";
+                case "bit":
+                    return "bool";
+                case "date":
+                case "time":
+                case "year":
+                case "datetime":
+                case "timestamp":
+                    return "DateTime";
+                case "tinyblob":
+                case "blob":
+                case "mediumblob":
+                case "longblog":
+                case "binary":
+                case "varbinary":
+                    return "byte[]";
+                case "char":
+                    return ByteLength == 36 ? "Guid" : "string";
+                case "varchar":
+                case "tinytext":
+                case "text":
+                case "mediumtext":
+                case "longtext":
+                    return "string";
+                case "point":
+                case "linestring":
+                case "polygon":
+                case "geometry":
+                case "multipoint":
+                case "multilinestring":
+                case "multipolygon":
+                case "geometrycollection":
+                case "enum":
+                case "set":
+                default:
+                    return csharpType;
+            }
+        }
+    }
+
+#>

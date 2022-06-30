@@ -17,4 +17,41 @@
     <ProjectReference Include="..\..\src\Yxl.Dapper.Extensions\Yxl.Dapper.Extensions.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="T4\Entity.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Entity.cs</LastGenOutput>
+    </None>
+    <None Update="T4\Manager.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Manager.cs</LastGenOutput>
+    </None>
+    <None Update="T4\Store.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Store.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="T4\Entity.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Entity.tt</DependentUpon>
+    </Compile>
+    <Compile Update="T4\Manager.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Manager.tt</DependentUpon>
+    </Compile>
+    <Compile Update="T4\Store.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Store.tt</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
 </Project>

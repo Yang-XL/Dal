@@ -1,0 +1,60 @@
+<#@ template language="C#" debug="false" hostspecific="true"#> 
+<#@ assembly name="System.Core.dll" #>
+<#@ assembly name="System.Data.dll" #>
+<#@ assembly name="System.Data.DataSetExtensions.dll" #>
+<#@ assembly name="System.Xml.dll" #>
+<#@ import namespace="System" #>
+<#@ import namespace="System.Xml" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Linq.Expressions" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="System.IO" #>
+<#@ include file="Manager.tt"#>
+<#@ include file="Store.tt"#>
+<#@ output extension=".cs"#>
+
+<#  
+	
+    var manager = YxlManager.Create(Host, GenerationEnvironment); 
+	GenerationEnvironment.Clear();	
+	var databse = Until.GetDataBase();
+	foreach(var tableInfo in databse.Tables)
+	{
+		manager.StartNewFile(tableInfo.T4EntityFileFullPath,"Yxl.Dal.Api",true);
+#>
+using System;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using Yxl.Dal.Aggregate;
+using Yxl.Dal.Attributes;
+using Yxl.Dapper.Extensions.Attributes;
+namespace <#= Until.DbConfig.NameSpace #>.<#=tableInfo.T4EntityNameSpace#>
+{
+    /// <summary>
+    /// <#= tableInfo.Description #>
+    /// CreateAt:<#= tableInfo.CreateAt #>
+    /// UpdateAt:<#= tableInfo.ModifyAt #>
+    /// </summary>
+	[DB("<#= Until.DbConfig.DbName #>"),Table("<#=tableInfo.TableName#>")]
+    public class <#=tableInfo.T4EntityClassName #> : IEntity
+    {
+		<# foreach(ColumnInfo column in tableInfo.Columns){ #>
+
+		/// <summary>
+		/// <#= column.Remark #>
+		/// </summary>		
+		[Column("<#=column.ColumnName #>")<# if(column.IsPrimaryKey){#>,Key<#}#><# if(column.IsIdentity){#>,Ignore(Dapper.Extensions.Enum.IgnoreEnum.Insert)<#}#>]
+		public <#=column.CSharpType #> <#= column.FiledName #> { get;  set ;  }
+		<#}#>
+	
+	}
+}
+<# 
+	manager.EndBlock();
+	}
+	manager.Process();
+#>
+
+
+
+

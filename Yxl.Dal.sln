@@ -29,11 +29,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Yxl.Dal.Api", "example\Yxl.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Yxl.Dal.MySql.Tests", "tests\Yxl.Dal.MySql.Tests\Yxl.Dal.MySql.Tests.csproj", "{963BD465-1A05-4A5C-978F-D2BDE2C47D86}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Yxl.Dal.Benchmarker.Test", "tests\Yxl.Dal.Benchmarker.Test\Yxl.Dal.Benchmarker.Test.csproj", "{414D91B1-6428-4306-823F-0C6BA5C02771}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Yxl.Dal.Benchmarker.Test", "tests\Yxl.Dal.Benchmarker.Test\Yxl.Dal.Benchmarker.Test.csproj", "{414D91B1-6428-4306-823F-0C6BA5C02771}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Mock", "Mock", "{656B8D15-8331-405B-91C7-37F0AA43F71C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mock.Entitys", "tests\mock\Mock.Entitys\Mock.Entitys.csproj", "{0659BA34-FB08-4C33-A420-84C42B05D6E6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mock.Entitys", "tests\mock\Mock.Entitys\Mock.Entitys.csproj", "{0659BA34-FB08-4C33-A420-84C42B05D6E6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

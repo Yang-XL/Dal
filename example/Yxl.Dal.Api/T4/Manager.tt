@@ -1,0 +1,226 @@
+﻿<#@ assembly name="EnvDTE" #>
+<#@ assembly name="Microsoft.VisualStudio.TextTemplating.Interfaces.11.0.dll" #>
+<#@ assembly name="System.Core.dll" #>
+
+<#@ import namespace="EnvDTE"#> 
+<#@ import namespace="Microsoft.VisualStudio.TextTemplating" #>
+<#@ import namespace="System"#>  
+<#@ import namespace="System.Collections.Generic"#>  
+<#@ import namespace="System.IO"#>  
+<#@ import namespace="System.Linq"#>  
+<#@ import namespace="System.Text" #>
+<#+
+	
+    public class YxlManager
+    {
+
+        public static Manager Create(ITextTemplatingEngineHost host, StringBuilder template)
+        {
+            return new Manager(host, template);
+        }
+
+        public class Block
+        {
+            public string FileName { get; set; } = "Test.cs";
+            public int Start { get; set; }
+            public int Length { get; set; }
+            public bool IsOverride { get; set; } = false;
+            public string ProjectName { get; set; } = "";
+
+            public string FullPath
+            {
+                get
+                {
+                    return Path.Combine(ProjectName, FileName);
+                }
+            }
+        }
+
+        public class Manager
+        {
+            public List<Block> blocks = new List<Block>();
+            public Block currentBlock;
+            public Block footerBlock = new Block();
+            public Block headerBlock = new Block();
+            public ITextTemplatingEngineHost host;
+            internal FileOutput FileOutputStrategy;
+            public StringBuilder template;
+
+
+            internal Manager(ITextTemplatingEngineHost host, StringBuilder template)
+            {
+                this.host = host;
+                this.template = template;
+                FileOutputStrategy = (host is IServiceProvider) ? new VsFileOutput(host) : new FileOutput();
+            }
+            public void StartNewFile(string fileName, string projectName, bool isOverride = true)
+            {
+                currentBlock = new Block { FileName = fileName, ProjectName = projectName, Start = template.Length, IsOverride = isOverride };
+            }
+
+            public void StartFooter()
+            {
+                footerBlock.Start = template.Length;
+            }
+
+            public void EndFooter()
+            {
+                footerBlock.Length = template.Length - footerBlock.Start;
+            }
+
+            public void StartHeader()
+            {
+                headerBlock.Start = template.Length;
+            }
+
+            public void EndHeader()
+            {
+                headerBlock.Length = template.Length - headerBlock.Start;
+            }
+
+            public void EndBlock()
+            {
+                currentBlock.Length = template.Length - currentBlock.Start;
+                blocks.Add(currentBlock);
+            }
+
+            public void Process()
+            {
+                var header = template.ToString(headerBlock.Start, headerBlock.Length);
+                var footer = template.ToString(footerBlock.Start, footerBlock.Length);
+                blocks.Reverse();
+                foreach (Block block in blocks)
+                {
+                    var content = header + template.ToString(block.Start, block.Length) + footer;
+                    FileOutputStrategy.CreateFile(block, content);
+                    template.Remove(block.Start, block.Length);
+                }
+            }
+        }
+
+        internal class FileOutput
+        {
+            public virtual void CreateFile(Block block, string content)
+            {
+                var fileInfo = new FileInfo(block.FullPath);
+                var directory = fileInfo.Directory;
+
+                if (!block.IsOverride && fileInfo.Exists)
+                {
+                    return;
+                }
+                if (!directory.Exists)
+                {
+                    directory.Create();
+                }
+                File.WriteAllText(fileInfo.FullName, content, Encoding.UTF8);
+            }
+        }
+
+        internal class VsFileOutput : FileOutput
+        {
+            private Solution solution;
+            private readonly ITextTemplatingEngineHost host;
+            internal VsFileOutput(ITextTemplatingEngineHost host)
+            {
+                IServiceProvider hostServiceProvider = (IServiceProvider)host;
+                if (hostServiceProvider == null)
+                    throw new ArgumentNullException("Could not obtain hostServiceProvider");
+
+                DTE dte = (DTE)hostServiceProvider.GetCOMService(typeof(DTE));
+
+                if (dte == null)
+                    throw new ArgumentNullException("Could not obtain DTE from host");
+                solution = dte.Solution;
+                this.host = host;
+            }
+
+            private readonly Dictionary<string, Project> dic = new Dictionary<string, Project>();
+
+            public override void CreateFile(Block block, string content)
+            {
+                var project = GetProject(block);
+                if (project == null)
+                {
+                    base.CreateFile(block, content);
+                }
+                
+                var projectFileName = project.FileName;
+                var projectPath = new FileInfo(projectFileName).Directory;
+                var fullName = Path.Combine(projectPath.FullName, block.FileName);
+                var fileInfo = new FileInfo(fullName);
+                var directory = fileInfo.Directory;
+                if (!block.IsOverride && fileInfo.Exists)
+                {
+                    return;
+                }
+                if (!directory.Exists)
+                {
+                    directory.Create();
+                }
+                File.WriteAllText(fileInfo.FullName, content, Encoding.UTF8);
+            }
+
+            private Project GetProject(Block block)
+            {
+
+                if (dic.ContainsKey(block.ProjectName))
+                {
+                    return dic[block.ProjectName];
+                }
+                foreach (var ti in solution.Projects)
+                {
+                    var j = ti as Project;
+                    if (j.Name == block.ProjectName)
+                    {
+                        dic.Add(block.ProjectName, j);
+                        return j;
+                    }
+                    var t = GetProject(j.ProjectItems, block.ProjectName);
+                    if (t != null)
+                    {
+                        dic.Add(block.ProjectName, t.SubProject);
+                        return t.SubProject;
+                    }
+                }
+                return null;
+
+            }
+
+            private ProjectItem GetProject(ProjectItems projectItems, string name)
+            {
+                if (projectItems == null)
+                {
+                    return null;
+                }
+                foreach (var i in projectItems)
+                {
+                    var item = i as ProjectItem;
+                    if (item.Name == name)
+                    {
+                        return item;
+                    }
+                    if (item.SubProject != null)
+                    {
+                        if (item.SubProject.Name == name)
+                        {
+                            return null;
+                        }
+                        if (item.SubProject.ProjectItems != null)
+                        {
+                            var res = GetProject(item.SubProject.ProjectItems, name);
+                            if (res != null)
+                            {
+                                return res;
+                            }
+                        }
+                    }
+                }
+                return null;
+            }
+
+
+        }
+
+    }
+#>
