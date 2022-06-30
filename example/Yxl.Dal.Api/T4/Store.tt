@@ -382,7 +382,7 @@
         {
             get
             {
-                return $"Entity\\{DBName}\\{ClassName}Entity.cs";
+                return $"{DBName}\\Entity\\{ClassName}Entity.cs";
             }
         }
         public string T4EntityClassName
@@ -396,7 +396,7 @@
         {
             get
             {
-                return $"Entity.{DBName}";
+                return $"{DBName}.Entity";
             }
         }
 
@@ -404,7 +404,7 @@
         {
             get
             {
-                return $"Repository\\{DBName}\\I{ClassName}Repository.cs";
+                return $"{DBName}\\IRepositories\\I{ClassName}Repository.cs";
             }
         }
         public string T4RepositoryInterfaceName
@@ -418,7 +418,7 @@
         {
             get
             {
-                return $"Repository.{DBName}";
+                return $"{DBName}.IRepositories";
             }
         }
 
@@ -426,7 +426,7 @@
         {
             get
             {
-                return $"Repository\\Impl\\{DBName}\\{ClassName}Repository.cs";
+                return $"{DBName}\\{ClassName}Repository.cs";
             }
         }
         public string T4RepositoryClassName
@@ -440,7 +440,7 @@
         {
             get
             {
-                return $"Repository.{DBName}.Impl";
+                return $"{DBName}.Repository.Impl";
             }
         }
 

@@ -20,7 +20,7 @@
 	var databse = Until.GetDataBase();
 	foreach(var tableInfo in databse.Tables)
 	{
-		manager.StartNewFile(tableInfo.T4EntityFileFullPath,"Yxl.Dal.Api",true);
+		manager.StartNewFile(tableInfo.T4EntityFileFullPath,"Yxl.Dal.Domain",true);
 #>
 using System;
 using System.ComponentModel.DataAnnotations;
@@ -49,6 +49,41 @@ namespace <#= Until.DbConfig.NameSpace #>.<#=tableInfo.T4EntityNameSpace#>
 	
 	}
 }
+<#
+	manager.EndBlock();
+	manager.StartNewFile(tableInfo.T4RepositoryInterfaceFileFullPath,"Yxl.Dal.Domain",true);
+#>
+using <#= Until.DbConfig.NameSpace #>.<#=tableInfo.T4EntityNameSpace#>;
+using Yxl.Dal.Repository;
+namespace <#= Until.DbConfig.NameSpace #>.<#=tableInfo.T4RepositoryInterfaceNameSpace#>
+{
+    /// <summary>
+    /// <#= tableInfo.Description #> Repository Interface
+    /// </summary>
+    public interface <#=tableInfo.T4RepositoryInterfaceName #> : IRespository<<#=tableInfo.T4EntityClassName #>>
+    {
+		
+	
+	}
+}
+<#
+	manager.EndBlock();
+	manager.StartNewFile(tableInfo.T4RepositoryFileFullPath,"Yxl.Dal.Repository",true);
+#>
+using <#= Until.DbConfig.NameSpace #>.<#=tableInfo.T4EntityNameSpace#>;
+using Yxl.Dal.Repository;
+namespace <#= Until.DbConfig.NameSpace #>.<#=tableInfo.T4RepositoryInterfaceNameSpace#>
+{
+    /// <summary>
+    /// <#= tableInfo.Description #> Repository Impl
+    /// </summary>
+    public class <#=tableInfo.T4RepositoryClassName #> : Respository<<#=tableInfo.T4EntityClassName #>>, <#=tableInfo.T4RepositoryInterfaceName #>
+    {
+		
+	
+	}
+}
+
 <# 
 	manager.EndBlock();
 	}
