@@ -6,8 +6,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\src\Yxl.Dal\Yxl.Dal.csproj" />
-    <ProjectReference Include="..\src\Yxl.Dapper.Extensions\Yxl.Dapper.Extensions.csproj" />
+    <ProjectReference Include="..\..\src\Yxl.Dal\Yxl.Dal.csproj" />
+    <ProjectReference Include="..\..\src\Yxl.Dapper.Extensions\Yxl.Dapper.Extensions.csproj" />
     <ProjectReference Include="..\Yxl.Dal.Domain\Yxl.Dal.Domain.csproj" />
   </ItemGroup>
 

@@ -4,6 +4,7 @@ using System;
 using Yxl.Dal.Context;
 using Yxl.Dal.DI;
 using Yxl.Dal.Repository;
+using Yxl.Dal.UnitWork;
 
 namespace Yxl.Dal.MySql
 {
@@ -14,7 +15,8 @@ namespace Yxl.Dal.MySql
             MySqlOptionsProvider p = new MySqlOptionsProvider();
             options(p);
             p.Build();
-            services.AddDal();
+            YxlDal.UseDal();
+            services.AddScoped(typeof(IUnitWork<>), typeof(UnitWork<>));
             services.AddScoped(typeof(IDbContext<>), typeof(DbContext<>));
             services.AddScoped(typeof(IRespository<>), typeof(Respository<>));
             return services;

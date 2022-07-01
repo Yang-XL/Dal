@@ -1,6 +1,6 @@
-﻿using Yxl.Dal.DapperTest.Entity;
+﻿using Yxl.Dal.Domain.DapperTest.Entity;
 using Yxl.Dal.Repository;
-namespace Yxl.Dal.DapperTest.IRepositories
+namespace Yxl.Dal.Domain.DapperTest.IRepositories
 {
     /// <summary>
     ///  Repository Interface

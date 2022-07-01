@@ -4,15 +4,15 @@ using System.ComponentModel.DataAnnotations.Schema;
 using Yxl.Dal.Aggregate;
 using Yxl.Dal.Attributes;
 using Yxl.Dapper.Extensions.Attributes;
-namespace Yxl.Dal.Entity.DapperTest
+namespace Yxl.Dal.Domain.DapperTest.Entity
 {
     /// <summary>
-    /// 会员表
-    /// CreateAt:2022-06-28 05:18:41
+    /// 
+    /// CreateAt:2022-06-21 07:57:38
     /// UpdateAt:
     /// </summary>
-	[DB("Test"),Table("member")]
-    public class MemberEntity : IEntity
+	[DB("Test"),Table("user")]
+    public class UserEntity : IEntity
     {
 		
 		/// <summary>
@@ -22,10 +22,10 @@ namespace Yxl.Dal.Entity.DapperTest
 		public DateTime? CreateAt { get;  set ;  }
 		
 		/// <summary>
-		/// 主键
+		/// 
 		/// </summary>		
-		[Column("id"),Key,Ignore(Dapper.Extensions.Enum.IgnoreEnum.Insert)]
-		public long Id { get;  set ;  }
+		[Column("id"),Key]
+		public Guid Id { get;  set ;  }
 		
 		/// <summary>
 		/// 

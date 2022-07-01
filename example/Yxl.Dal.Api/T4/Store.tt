@@ -17,10 +17,9 @@
 <#@ import namespace="System.Globalization" #>
 <#+
 	public static class Until
-    {
+    {     
         public static Config DbConfig = new Config
         {
-            NameSpace = "Yxl.Dal",
             DbName = "Test",
             ConnectionString = "server=localhost;port=3306;user=root;password=123456; database=dapper_test;pooling=true;min pool size=5;max pool size=100;connect timeout = 20;",
             DbType = "MYSQL"

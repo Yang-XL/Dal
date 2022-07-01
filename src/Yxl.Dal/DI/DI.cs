@@ -1,18 +1,14 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using Yxl.Dal.UnitWork;
-using Yxl.Dapper.Extensions.DI;
+﻿
+
+using Yxl.Dapper.Extensions.Dapper;
 
 namespace Yxl.Dal.DI
 {
-    public static class DI
+    public static class YxlDal
     {
-
-
-        public static IServiceCollection AddDal(this IServiceCollection services)
+        public static void UseDal()
         {
-            services.AddYxlDapperExtensions();
-            services.AddTransient(typeof(IUnitWork<>), typeof(UnitWork<>));
-            return services;
+            DapperExtenstion.UseDapper();
         }
     }
 

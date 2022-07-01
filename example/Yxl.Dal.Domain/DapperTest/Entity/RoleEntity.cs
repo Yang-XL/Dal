@@ -4,15 +4,15 @@ using System.ComponentModel.DataAnnotations.Schema;
 using Yxl.Dal.Aggregate;
 using Yxl.Dal.Attributes;
 using Yxl.Dapper.Extensions.Attributes;
-namespace Yxl.Dal.DapperTest.Entity
+namespace Yxl.Dal.Domain.DapperTest.Entity
 {
     /// <summary>
     /// 
-    /// CreateAt:2022-06-21 07:57:38
+    /// CreateAt:2022-06-21 07:57:42
     /// UpdateAt:
     /// </summary>
-	[DB("Test"),Table("user")]
-    public class UserEntity : IEntity
+	[DB("Test"),Table("role")]
+    public class RoleEntity : IEntity
     {
 		
 		/// <summary>
@@ -30,20 +30,8 @@ namespace Yxl.Dal.DapperTest.Entity
 		/// <summary>
 		/// 
 		/// </summary>		
-		[Column("login_name")]
-		public string LoginName { get;  set ;  }
-		
-		/// <summary>
-		/// 
-		/// </summary>		
 		[Column("name")]
 		public string Name { get;  set ;  }
-		
-		/// <summary>
-		/// 
-		/// </summary>		
-		[Column("pwd")]
-		public string Pwd { get;  set ;  }
 		
 		/// <summary>
 		/// 

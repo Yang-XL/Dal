@@ -59,7 +59,7 @@ namespace Yxl.Dapper.Extensions.Uitls.ExpressionsTree
         /// </summary>
         /// <param name="e"></param>
         /// <returns></returns>
-        public static MemberExpression? GetRootMember(this MemberExpression e)
+        public static MemberExpression GetRootMember(this MemberExpression e)
         {
             if (e.Expression == null || e.Expression.NodeType == ExpressionType.Constant)
                 return e;

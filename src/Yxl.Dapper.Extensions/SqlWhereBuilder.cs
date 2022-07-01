@@ -44,9 +44,9 @@ namespace Yxl.Dapper.Extensions
 
     public class SqlWhereLambdaBuilder<T> : ISqlBuilder
     {
-        public LambdaExpression? Lambda { get; private set; }
+        public LambdaExpression Lambda { get; private set; }
 
-        public string? Alias { get; private set; }
+        public string Alias { get; private set; }
         /// <summary>
         /// 
         /// </summary>

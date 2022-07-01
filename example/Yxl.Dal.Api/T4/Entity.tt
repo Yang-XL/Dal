@@ -13,8 +13,7 @@
 <#@ include file="Store.tt"#>
 <#@ output extension=".cs"#>
 
-<#  
-	
+<#  	
     var manager = YxlManager.Create(Host, GenerationEnvironment); 
 	GenerationEnvironment.Clear();	
 	var databse = Until.GetDataBase();
@@ -28,7 +27,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using Yxl.Dal.Aggregate;
 using Yxl.Dal.Attributes;
 using Yxl.Dapper.Extensions.Attributes;
-namespace <#= Until.DbConfig.NameSpace #>.<#=tableInfo.T4EntityNameSpace#>
+namespace Yxl.Dal.Domain.<#=tableInfo.T4EntityNameSpace#>
 {
     /// <summary>
     /// <#= tableInfo.Description #>
@@ -53,9 +52,9 @@ namespace <#= Until.DbConfig.NameSpace #>.<#=tableInfo.T4EntityNameSpace#>
 	manager.EndBlock();
 	manager.StartNewFile(tableInfo.T4RepositoryInterfaceFileFullPath,"Yxl.Dal.Domain",true);
 #>
-using <#= Until.DbConfig.NameSpace #>.<#=tableInfo.T4EntityNameSpace#>;
+using Yxl.Dal.Domain.<#=tableInfo.T4EntityNameSpace#>;
 using Yxl.Dal.Repository;
-namespace <#= Until.DbConfig.NameSpace #>.<#=tableInfo.T4RepositoryInterfaceNameSpace#>
+namespace Yxl.Dal.Domain.<#=tableInfo.T4RepositoryInterfaceNameSpace#>
 {
     /// <summary>
     /// <#= tableInfo.Description #> Repository Interface
@@ -70,9 +69,10 @@ namespace <#= Until.DbConfig.NameSpace #>.<#=tableInfo.T4RepositoryInterfaceName
 	manager.EndBlock();
 	manager.StartNewFile(tableInfo.T4RepositoryFileFullPath,"Yxl.Dal.Repository",true);
 #>
-using <#= Until.DbConfig.NameSpace #>.<#=tableInfo.T4EntityNameSpace#>;
+using Yxl.Dal.Domain.<#=tableInfo.T4EntityNameSpace#>;
+using Yxl.Dal.Domain.<#=tableInfo.T4RepositoryInterfaceNameSpace#>;
 using Yxl.Dal.Repository;
-namespace <#= Until.DbConfig.NameSpace #>.<#=tableInfo.T4RepositoryInterfaceNameSpace#>
+namespace Yxl.Dal.Repository.<#=tableInfo.T4RepositoryInterfaceNameSpace#>
 {
     /// <summary>
     /// <#= tableInfo.Description #> Repository Impl

@@ -26,7 +26,7 @@ namespace Yxl.Dapper.Extensions
             var tableName = typeof(T).CreateTable().GetTableName(sqlDialect);
             var sql = "INSERT INTO {0} ({1}) VALUES ({2})";
             Dictionary<IFiled, object> insertDic = new Dictionary<IFiled, object>();
-            IFiled? keyFiled = null;
+            IFiled keyFiled = null;
             foreach (var item in typeof(T).CreateFiles())
             {
                 var currData = item.MetaData.GetValue(model);
