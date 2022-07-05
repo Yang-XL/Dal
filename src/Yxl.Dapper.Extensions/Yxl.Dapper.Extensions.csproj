@@ -1,21 +1,18 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
-  <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
-    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <Description>基于Dapper的一些扩展使用</Description>
-    <PackageProjectUrl>https://github.com/Yang-XL/Dal</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/Yang-XL/Dal</RepositoryUrl>
-    <PackageTags>Dapper;Dal;Dapper Extension</PackageTags>
-    <PackageReleaseNotes>借鉴DapperExtension 整合Dapper 方便使用的Dal工具类</PackageReleaseNotes>
-    <Version>1.0.2</Version>
-    <Authors>Yxl</Authors>
-  </PropertyGroup>
-
+	<PropertyGroup>
+		<TargetFramework>netstandard2.0</TargetFramework>
+		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+		<Description>基于Dapper的一些扩展使用</Description>
+		<PackageProjectUrl>https://github.com/Yang-XL/Dal</PackageProjectUrl>
+		<RepositoryUrl>https://github.com/Yang-XL/Dal</RepositoryUrl>
+		<PackageTags>Dapper;Dal;Dapper Extension</PackageTags>
+		<PackageReleaseNotes>借鉴DapperExtension 整合Dapper 方便使用的Dal工具类</PackageReleaseNotes>		
+		<Authors>Yxl</Authors>
+		<PackageId>Yxl.Dapper.Extensions</PackageId>
+	</PropertyGroup>
 	<ItemGroup>
 		<PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
 		<PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
 		<PackageReference Include="Yxl-Dapper" Version="2.0.120" />
 	</ItemGroup>
-
 </Project>

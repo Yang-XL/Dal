@@ -97,11 +97,6 @@ namespace Yxl.Dapper.Extensions.Uitls.ExpressionsTree
                             return b.Left;
                     }
                     break;
-                case ExpressionType.Call:
-                    var aa = ((MethodCallExpression)expression).Object;
-                    
-                    var d = 1;
-                    break;
                 default:
                     _isDeep = true;
                     return expression;

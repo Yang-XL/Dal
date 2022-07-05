@@ -250,7 +250,7 @@ namespace Yxl.Dapper.Extensions.Uitls
                 getter = getterLambda.Compile();
                 result = true;
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 getter = null;
             }
