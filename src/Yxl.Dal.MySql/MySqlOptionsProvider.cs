@@ -1,6 +1,7 @@
 ﻿using MySql.Data.MySqlClient;
 using System;
-using System.Data.Common;
+using System.Collections.Generic;
+using System.Linq;
 using Yxl.Dal.Options;
 using Yxl.Dapper.Extensions.SqlDialect;
 
@@ -16,8 +17,8 @@ namespace Yxl.Dal.MySql
         public void UserMysql(string name, string connectionString)
         {
             base.Config(() => new MySqlConnection(connectionString));
-            base.Config(name, connectionString, Dapper.Extensions.Enum.SqlProvider.MYSQL,new MySqlDialect());
-        }       
+            base.Config(name, connectionString, Dapper.Extensions.Enum.SqlProvider.MYSQL, new MySqlDialect());
+        }
 
         /// <summary>
         /// 当您的项目只有一个数据的时候使用
@@ -26,6 +27,14 @@ namespace Yxl.Dal.MySql
         public void UserMysql(string connectionString)
         {
             UserMysql(String.Empty, connectionString);
+        }
+
+        public void UseMysql(IEnumerable<DbOptions> options)
+        {
+            foreach (var item in options.Where(a => a.SqlProvider == Dapper.Extensions.Enum.SqlProvider.MYSQL))
+            {
+                UserMysql(item.Name, item.ConnectionString);
+            }
         }
 
     }

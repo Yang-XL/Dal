@@ -7,6 +7,13 @@ namespace Yxl.Dal.Options
 {
     public class DbOptions
     {
+        public DbOptions() { }
+        public DbOptions(string name, string connectionString)
+        {
+            Name = name;
+            ConnectionString = connectionString;
+        }
+
         /// <summary>
         /// 数据库名
         /// </summary>
