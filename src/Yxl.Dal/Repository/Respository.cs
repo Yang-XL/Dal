@@ -1,6 +1,7 @@
 ﻿using Dapper;
 using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Threading.Tasks;
 using Yxl.Dal.Aggregate;
 using Yxl.Dal.Context;
@@ -9,13 +10,20 @@ using Yxl.Dapper.Extensions;
 
 namespace Yxl.Dal.Repository
 {
-    public class Respository<T> : DbContext<T>, IRespository<T> where T : IEntity
+    public class Respository<T> : IRespository<T> where T : IEntity
     {
+        private readonly IDbContext dbContext;
+
+        public Respository()
+        {
+            dbContext = DbContextProvider.GetDbContext<T>();
+        }
+
         public T Insert(T model)
         {
             var sqlBuilder = new SqlInsertBuilder<T>(model);
-            var sqlInfo = sqlBuilder.GetSql(_sqlDialect);
-            using (var connection = OpenConnection())
+            var sqlInfo = sqlBuilder.GetSql(dbContext.SqlDialect);
+            using (var connection = dbContext.OpenConnection())
             {
                 if (sqlBuilder.IsQuery)
                 {
@@ -30,8 +38,8 @@ namespace Yxl.Dal.Repository
         public async Task<T> InsertAsync(T model)
         {
             var sqlBuilder = new SqlInsertBuilder<T>(model);
-            var sqlInfo = sqlBuilder.GetSql(_sqlDialect);
-            using (var connection = await OpenConnectionAsync())
+            var sqlInfo = sqlBuilder.GetSql(dbContext.SqlDialect);
+            using (var connection = await dbContext.OpenConnectionAsync())
             {
                 if (sqlBuilder.IsQuery)
                 {
@@ -45,8 +53,8 @@ namespace Yxl.Dal.Repository
 
         public int UpdateById(T model)
         {
-            var sqlInfo = new SqlUpdateBuilder<T>().UpdateById(model).GetSql(_sqlDialect);
-            using (var connection = OpenConnection())
+            var sqlInfo = new SqlUpdateBuilder<T>().UpdateById(model).GetSql(dbContext.SqlDialect);
+            using (var connection = dbContext.OpenConnection())
             {
                 return connection.Execute(sqlInfo.Sql.ToString(), sqlInfo.GetDynamicParameters());
             }
@@ -54,8 +62,8 @@ namespace Yxl.Dal.Repository
 
         public async Task<int> UpdateByIdAsync(T model)
         {
-            var sqlInfo = new SqlUpdateBuilder<T>().UpdateById(model).GetSql(_sqlDialect);
-            using (var connection = await OpenConnectionAsync())
+            var sqlInfo = new SqlUpdateBuilder<T>().UpdateById(model).GetSql(dbContext.SqlDialect);
+            using (var connection = await dbContext.OpenConnectionAsync())
             {
                 return await connection.ExecuteAsync(sqlInfo.Sql.ToString(), sqlInfo.GetDynamicParameters());
             }
@@ -93,19 +101,19 @@ namespace Yxl.Dal.Repository
 
         public int Delete(SqlDeleteBuilder<T> where)
         {
-            var sqlInfo = where.GetSql(_sqlDialect);
-            using (var connection = OpenConnection())
+            var sqlInfo = where.GetSql(dbContext.SqlDialect);
+            using (var connection = dbContext.OpenConnection())
             {
                 return connection.Execute(sqlInfo.Sql.ToString(), sqlInfo.GetDynamicParameters());
             }
         }
-    
+
 
 
         public async Task<int> DeleteAsync(SqlDeleteBuilder<T> where)
         {
-            var sqlInfo = where.GetSql(_sqlDialect);
-            using (var connection = await OpenConnectionAsync())
+            var sqlInfo = where.GetSql(dbContext.SqlDialect);
+            using (var connection = await dbContext.OpenConnectionAsync())
             {
                 return await connection.ExecuteAsync(sqlInfo.Sql.ToString(), sqlInfo.GetDynamicParameters());
             }
@@ -128,8 +136,8 @@ namespace Yxl.Dal.Repository
         public T GetById(object id)
         {
             var builder = new SqlQueryBuilder<T>();
-            var sqlInfo = builder.QueryById(_sqlDialect, id);
-            using (var connection = OpenConnection())
+            var sqlInfo = builder.QueryById(dbContext.SqlDialect, id);
+            using (var connection = dbContext.OpenConnection())
             {
                 return connection.QueryFirstOrDefault<T>(sqlInfo.Sql.ToString(), sqlInfo.GetDynamicParameters());
             }
@@ -138,8 +146,8 @@ namespace Yxl.Dal.Repository
         public async Task<T> GetByIdAsync(object id)
         {
             var builder = new SqlQueryBuilder<T>();
-            var sqlInfo = builder.QueryById(_sqlDialect, id);
-            using (var connection = await OpenConnectionAsync())
+            var sqlInfo = builder.QueryById(dbContext.SqlDialect, id);
+            using (var connection = await dbContext.OpenConnectionAsync())
             {
                 return await connection.QueryFirstOrDefaultAsync<T>(sqlInfo.Sql.ToString(), sqlInfo.GetDynamicParameters());
             }
@@ -174,8 +182,8 @@ namespace Yxl.Dal.Repository
 
         public async Task<IEnumerable<T>> QueryWhereAsync(SqlWhereBuilder<T> where)
         {
-            var sqlInfo = where.GetSql(_sqlDialect);
-            using (var connection = await OpenConnectionAsync())
+            var sqlInfo = where.GetSql(dbContext.SqlDialect);
+            using (var connection = await dbContext.OpenConnectionAsync())
             {
                 return await connection.QueryAsync<T>(sqlInfo.Sql.ToString(), sqlInfo.GetDynamicParameters());
             }
@@ -183,8 +191,8 @@ namespace Yxl.Dal.Repository
 
         public IEnumerable<T> QueryWhere(SqlWhereBuilder<T> where)
         {
-            var sqlInfo = where.GetSql(_sqlDialect);
-            using (var connection = OpenConnection())
+            var sqlInfo = where.GetSql(dbContext.SqlDialect);
+            using (var connection = dbContext.OpenConnection())
             {
                 return connection.Query<T>(sqlInfo.Sql.ToString(), sqlInfo.GetDynamicParameters());
             }
@@ -193,8 +201,8 @@ namespace Yxl.Dal.Repository
         public async Task<IEnumerable<T>> QueryAsync(SqlQueryBuilder<T> query)
         {
 
-            var sqlInfo = query.GetSql(_sqlDialect);
-            using (var connection = await OpenConnectionAsync())
+            var sqlInfo = query.GetSql(dbContext.SqlDialect);
+            using (var connection = await dbContext.OpenConnectionAsync())
             {
                 return await connection.QueryAsync<T>(sqlInfo.Sql.ToString(), sqlInfo.GetDynamicParameters());
             }
@@ -202,8 +210,8 @@ namespace Yxl.Dal.Repository
 
         public IEnumerable<T> Query(SqlQueryBuilder<T> query)
         {
-            var sqlInfo = query.GetSql(_sqlDialect);
-            using (var connection = OpenConnection())
+            var sqlInfo = query.GetSql(dbContext.SqlDialect);
+            using (var connection = dbContext.OpenConnection())
             {
                 return connection.Query<T>(sqlInfo.Sql.ToString(), sqlInfo.GetDynamicParameters());
             }
@@ -212,8 +220,8 @@ namespace Yxl.Dal.Repository
 
         public int Update(SqlUpdateBuilder<T> update)
         {
-            var sqlInfo = update.GetSql(_sqlDialect);
-            using (var connection = OpenConnection())
+            var sqlInfo = update.GetSql(dbContext.SqlDialect);
+            using (var connection = dbContext.OpenConnection())
             {
                 return connection.Execute(sqlInfo.Sql.ToString(), sqlInfo.GetDynamicParameters());
             }
@@ -221,8 +229,8 @@ namespace Yxl.Dal.Repository
 
         public async Task<int> UpdateAsync(SqlUpdateBuilder<T> update)
         {
-            var sqlInfo = update.GetSql(_sqlDialect);
-            using (var connection = await OpenConnectionAsync())
+            var sqlInfo = update.GetSql(dbContext.SqlDialect);
+            using (var connection = await dbContext.OpenConnectionAsync())
             {
                 return await connection.ExecuteAsync(sqlInfo.Sql.ToString(), sqlInfo.GetDynamicParameters());
             }

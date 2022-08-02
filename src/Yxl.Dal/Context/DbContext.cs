@@ -15,15 +15,18 @@ namespace Yxl.Dal.Context
     /// </summary>
     public class DbContext : IDbContext
     {
-        protected readonly ISqlDialect _sqlDialect;
+        public ISqlDialect SqlDialect { get; }
         /// <summary>
         ///     DB Connection for internal use
         /// </summary>
         protected readonly DbConnection InnerConnection;
 
+        public string DbName { get; }
+
         public DbContext(DbOptions dbOptions)
         {
-            _sqlDialect = dbOptions.SqlDialect;
+            SqlDialect = dbOptions.SqlDialect;
+            DbName = dbOptions.Name;
             InnerConnection = dbOptions.CreateDbConnection();
         }
 
@@ -64,10 +67,4 @@ namespace Yxl.Dal.Context
         }
     }
 
-    public class DbContext<T> : DbContext, IDbContext<T> where T : IEntity
-    {
-        public DbContext() : base(DbOptionStore.GetOptions<T>())
-        {
-        }
-    }
 }

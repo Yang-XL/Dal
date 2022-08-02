@@ -1,10 +1,10 @@
 ﻿using Dapper;
 using System;
 using System.Collections.Concurrent;
-using System.Data;
-using System.Data.Common;
 using System.Threading.Tasks;
 using Yxl.Dal.Aggregate;
+using Yxl.Dal.Common.Util;
+using Yxl.Dal.Context;
 using Yxl.Dal.Options;
 using Yxl.Dapper.Extensions;
 
@@ -14,83 +14,65 @@ namespace Yxl.Dal.UnitWork
     {
         private readonly ConcurrentStack<ISqlBuilder> _store = new ConcurrentStack<ISqlBuilder>();
 
-        protected readonly DbConnection InnerConnection;
+        protected readonly IDbContext dbContext;
         protected readonly DbOptions options;
-        public UnitWork(DbOptions options)
+        public UnitWork(string dbName)
         {
-            this.options = options;
-            InnerConnection = options.CreateDbConnection();
-        }
-        public UnitWork() : this(DbOptionStore.GetOptions(string.Empty))
-        {
+            dbContext = DbContextProvider.GetDbContext(dbName);
         }
 
         public bool Commited { get; protected set; }
 
-        protected virtual void OpenConnection()
-        {
-            if (InnerConnection.State != ConnectionState.Open && InnerConnection.State != ConnectionState.Connecting)
-                InnerConnection.Open();
-        }
-        protected virtual async Task OpenConnectionAsync()
-        {
-            if (InnerConnection.State != ConnectionState.Open && InnerConnection.State != ConnectionState.Connecting)
-                await InnerConnection.OpenAsync();
-        }
 
         public bool Commit()
         {
-            OpenConnection();
-            using (var tran = InnerConnection.BeginTransaction())
+            using (var connection = dbContext.OpenConnection())
             {
-                try
+                using (var tran = dbContext.BeginTransaction())
                 {
-                    foreach (var item in _store)
+                    try
                     {
-                        var sql = item.GetSql(options.SqlDialect);
-                        InnerConnection.Execute(sql.Sql.ToString(), sql.GetDynamicParameters(), tran);
+                        foreach (var item in _store)
+                        {
+                            var sql = item.GetSql(options.SqlDialect);
+                            connection.Execute(sql.Sql.ToString(), sql.GetDynamicParameters(), tran);
+                        }
+                        tran.Commit();
+                        Commited = true;
+                        _store.Clear();
                     }
-                    Commited = true;
-                    tran.Commit();
-                }
-                catch (Exception ex)
-                {
-                    tran.Rollback();
-                }
+                    catch (Exception ex)
+                    {
+                        tran.Rollback();
+                    }
 
+                }
             }
             return Commited;
         }
 
         public async Task<bool> CommitAsync()
         {
-            await OpenConnectionAsync();
-            using (var tran = await InnerConnection.BeginTransactionAsync())
+            using (var connection = await dbContext.OpenConnectionAsync())
             {
-                try
+                using (var tran = await dbContext.BeginTransactionAsync())
                 {
-                    while (!_store.IsEmpty)
+                    try
                     {
-                        if (_store.TryPop(out var sqlBuilder))
+                        foreach (var item in _store)
                         {
-                            var sql = sqlBuilder.GetSql(options.SqlDialect);
-                            await InnerConnection.ExecuteAsync(sql.Sql.ToString(), sql.GetDynamicParameters(), tran);
+                            var sql = item.GetSql(options.SqlDialect);
+                            await connection.ExecuteAsync(sql.Sql.ToString(), sql.GetDynamicParameters(), tran);
                         }
-                        else
-                        {
-                            throw new InvalidOperationException("Unit Work Pop Error");
-                        }
+                        tran.Commit();
+                        Commited = true;
+                        _store.Clear();
                     }
-                    Commited = true;
-                    await tran.CommitAsync();
-                }
-                catch (Exception ex)
-                {
-                    await tran.RollbackAsync();
-                }
-                finally
-                {
-                    _store.Clear();
+                    catch (Exception ex)
+                    {
+                        tran.Rollback();
+                    }
+
                 }
             }
             return Commited;
@@ -129,21 +111,13 @@ namespace Yxl.Dal.UnitWork
 
         public void Dispose()
         {
-            if (InnerConnection != null)
-            {
-                if (InnerConnection.State != ConnectionState.Closed)
-                {
-                    InnerConnection.Close();
-                }
-                InnerConnection.Dispose();
-            }
             _store.Clear();
         }
     }
 
     public class UnitWork<T> : UnitWork, IUnitWork<T> where T : IEntity
     {
-        public UnitWork() : base(DbOptionStore.GetOptions<T>())
+        public UnitWork() : base(DbUntil.GetDbName<T>())
         {
         }
     }

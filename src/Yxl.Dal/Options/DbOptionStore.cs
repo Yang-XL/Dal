@@ -23,7 +23,7 @@ namespace Yxl.Dal.Options
         {
             if (!store.TryGetValue(name, out var db))
             {
-                throw new ArgumentException($"name {name} is not config");
+                throw new ArgumentException($"DbOption {name} is not config");
             }
             return db;
         }

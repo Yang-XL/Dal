@@ -1,8 +1,7 @@
 ﻿using System;
-using System.Data;
 using System.Data.Common;
 using System.Threading.Tasks;
-using Yxl.Dal.Aggregate;
+using Yxl.Dapper.Extensions.SqlDialect;
 
 namespace Yxl.Dal.Context
 {
@@ -12,6 +11,10 @@ namespace Yxl.Dal.Context
 
     public interface IDbContext : IDisposable
     {
+        ISqlDialect SqlDialect { get; }
+
+        string DbName { get; }
+
         /// <summary>
         /// 开启事务
         /// </summary>
@@ -22,7 +25,7 @@ namespace Yxl.Dal.Context
         /// </summary>
         /// <returns></returns>
         Task<DbTransaction> BeginTransactionAsync();
-               
+
         /// <summary>
         /// 打开链接
         /// </summary>
@@ -33,10 +36,5 @@ namespace Yxl.Dal.Context
         /// </summary>
         /// <returns></returns>
         DbConnection OpenConnection();
-    }
-
-    public interface IDbContext<T> : IDbContext where T : IEntity
-    {
-
     }
 }

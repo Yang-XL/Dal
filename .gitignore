@@ -22,3 +22,5 @@
 
 /Yxl.Dal.Domain/obj
 /Yxl.Dal.Repository/obj
+/src/Yxl.Dal/nupkgs
+/src/Yxl.Dal.MySql/nupkgs

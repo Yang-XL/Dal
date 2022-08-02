@@ -7,13 +7,6 @@ namespace Yxl.Dal.Options
 {
     public class DbOptions
     {
-        public DbOptions() { }
-        public DbOptions(string name, string connectionString)
-        {
-            Name = name;
-            ConnectionString = connectionString;
-        }
-
         /// <summary>
         /// 数据库名
         /// </summary>
@@ -22,18 +15,18 @@ namespace Yxl.Dal.Options
         /// 
         /// 数据库类型
         /// </summary>
-        public SqlProvider SqlProvider { get; set; } = SqlProvider.MYSQL;
+        public SqlProvider SqlProvider { get; protected set; }
 
 
-        public Func<DbConnection> CreateDbConnection { get; set; }
+        public Func<DbConnection> CreateDbConnection { get; protected set; }
 
 
-        public ISqlDialect SqlDialect { get; set; }
+        public ISqlDialect SqlDialect { get; protected set; }
 
         /// <summary>
         /// 链接字符串
         /// </summary>
-        public string ConnectionString { get; set; } = string.Empty;
+        public string ConnectionString { get; set; }
     }
 
 
