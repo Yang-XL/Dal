@@ -7,8 +7,7 @@ using Yxl.Dapper.Extensions.Core;
 
 namespace Yxl.Dapper.Extensions.Wrapper.Impl
 {
-    public abstract class Nested<Children> : INested<Children>
-        where Children : class, INested<Children>, new()
+    public abstract class Nested<Children> : INested<Children> where Children : class, INested<Children>, new()
     {
         public ISqlWhereGroup Group { get; set; } = new SqlWhereGroup();
 

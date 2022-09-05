@@ -115,15 +115,6 @@ namespace Yxl.Dapper.Extensions.Enum
 
             switch (op)
             {
-                //case Operator.Like:
-                //case Operator.NotLike:
-                //    return str + " {0}";
-                //case Operator.StartsWith:
-                //case Operator.NotStartsWith:
-                //    return str + " {0}%";
-                //case Operator.EndWith:
-                //case Operator.NotEndWith:
-                //    return str + " %{0}";
                 case Operator.Null:
                 case Operator.NotNull:
                     return str;

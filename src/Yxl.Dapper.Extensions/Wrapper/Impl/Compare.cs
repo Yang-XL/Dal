@@ -2,7 +2,6 @@
 using Yxl.Dapper.Extensions.Metadata;
 using Yxl.Dapper.Extensions.SqlWhere.Impl;
 using System.Collections;
-using System.Linq.Expressions;
 
 namespace Yxl.Dapper.Extensions.Wrapper.Impl
 {
@@ -18,7 +17,7 @@ namespace Yxl.Dapper.Extensions.Wrapper.Impl
 
         public Children EndWith(TColumn columnName, string val)
         {
-            return AddSqlItem(new CompareSqlWhere(GetColumn(columnName), Operator.EndWith, "%" + val));
+            return AddSqlItem(new CompareSqlWhere(GetColumn(columnName), Operator.EndWith, $"%{val}"));
         }
 
         public Children Eq(TColumn columnName, object val)
@@ -52,7 +51,7 @@ namespace Yxl.Dapper.Extensions.Wrapper.Impl
 
         public Children Like(TColumn columnName, string val)
         {
-            return AddSqlItem(new CompareSqlWhere(GetColumn(columnName), Operator.Like, "%" + val + "%"));
+            return AddSqlItem(new CompareSqlWhere(GetColumn(columnName), Operator.Like, $"%{val}%"));
         }
 
         public Children Lt(TColumn columnName, object val)
@@ -67,7 +66,7 @@ namespace Yxl.Dapper.Extensions.Wrapper.Impl
 
         public Children StartsWith(TColumn columnName, string val)
         {
-            return AddSqlItem(new CompareSqlWhere(GetColumn(columnName), Operator.StartsWith, val + "%"));
+            return AddSqlItem(new CompareSqlWhere(GetColumn(columnName), Operator.StartsWith, $"{val}%"));
         }
 
         protected virtual IFiled GetColumn(TColumn column)

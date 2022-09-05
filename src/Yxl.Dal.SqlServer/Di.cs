@@ -14,7 +14,6 @@ namespace Yxl.Dal.SqlServer
     public static class DI
     {
 
-
         public static void AddMsSqlserver(this DbOptions options, string dbName, string connectionString)
         {
             Dal.DI.YxlDal.Register(new SqlServerDbOptions(dbName, connectionString));

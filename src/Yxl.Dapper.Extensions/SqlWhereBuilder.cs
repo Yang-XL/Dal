@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
 using Yxl.Dapper.Extensions.Core;
 using Yxl.Dapper.Extensions.Metadata;
 using Yxl.Dapper.Extensions.SqlDialect;
@@ -12,6 +10,7 @@ using Yxl.Dapper.Extensions.Wrapper.Impl;
 
 namespace Yxl.Dapper.Extensions
 {
+
     public class SqlWhereBuilder<T> : Compare<Expression<Func<T, object>>, SqlWhereBuilder<T>>
     {
         private readonly ITable Table;
@@ -36,10 +35,6 @@ namespace Yxl.Dapper.Extensions
             }
             return base.GetSqlWhere(sqlDialect);
         }
-
-
-
-
     }
 
     public class SqlWhereLambdaBuilder<T> : ISqlBuilder

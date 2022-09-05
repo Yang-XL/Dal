@@ -6,7 +6,7 @@ using Yxl.Dal.Repository;
 using Yxl.Dal.UnitWork;
 using Yxl.Dapper.Extensions.Dapper;
 
-namespace Yxl.Dal.DI
+namespace Yxl.Dal
 {
     public static class YxlDal
     {

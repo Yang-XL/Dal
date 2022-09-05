@@ -45,7 +45,7 @@ namespace Yxl.Dal.MySql.Tests
 
         [TestMethod]
         public void Insert()
-        {
+        {        
             var entity = new MemberEntity()
             {
                 Name = "admin",

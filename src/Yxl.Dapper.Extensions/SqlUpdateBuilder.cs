@@ -15,14 +15,27 @@ namespace Yxl.Dapper.Extensions
     {
         private readonly List<IUpdateFiled> _updateFiled;
         private SqlWhereBuilder<T> sqlWhereBuilder;
-
-        private readonly ITable _updaeTable;
+        private readonly ITable _updateTable;
+        private readonly IEnumerable<IFiled> _allFiled;
 
         public SqlUpdateBuilder()
         {
-            _updaeTable = typeof(T).CreateTable();
+            _updateTable = typeof(T).CreateTable();
+            _allFiled = typeof(T).CreateFiles();
             _updateFiled = new List<IUpdateFiled>();
             sqlWhereBuilder = new SqlWhereBuilder<T>();
+            InitUpdateFile();
+        }
+
+        private void InitUpdateFile()
+        {
+            foreach (var item in _allFiled)
+            {
+                if (item.UpdatedAt && !item.IgnoreUpdate)
+                {
+                    TryAddFile(item, DateTime.Now);
+                }
+            }
         }
 
         public SqlUpdateBuilder<T> Where(Action<SqlWhereBuilder<T>> where)
@@ -33,7 +46,7 @@ namespace Yxl.Dapper.Extensions
 
         public SqlUpdateBuilder<T> Set(Expression<Func<T, object>> colum, object value)
         {
-            _updateFiled.Add(new UpdateFiled(new Filed(ExpressionHelper.GetProperty(colum).ToString(), _updaeTable), value));
+            TryAddFile(new Filed(ExpressionHelper.GetProperty(colum).ToString()), value);
             return this;
         }
 
@@ -41,17 +54,8 @@ namespace Yxl.Dapper.Extensions
         {
             var sqlInfo = new SqlInfo();
 
-            var allFiles = typeof(T).CreateFiles();
-            foreach (var file in allFiles)
-            {
-                if (file.UpdatedAt)
-                {
-                    TryAddFile(file, DateTime.Now);
-                }
-            }
-
             var filedSql = _updateFiled.GetSql(sqlDialect);
-            sqlInfo.Append($"UPDATE {_updaeTable.GetTableName(sqlDialect)} SET {filedSql.Sql}");
+            sqlInfo.Append($"UPDATE {_updateTable.GetTableName(sqlDialect)} SET {filedSql.Sql}");
             sqlInfo.AddParameters(filedSql.Parameters);
             var sqlWhere = sqlWhereBuilder.GetSqlWhere(sqlDialect);
             sqlInfo.AppendSqlWhere(sqlWhere);
@@ -78,9 +82,12 @@ namespace Yxl.Dapper.Extensions
 
         internal SqlUpdateBuilder<T> LogicalDelete(Action<SqlWhereBuilder<T>> where)
         {
-            foreach (var item in typeof(T).CreateFiles().Where(a => a.LogicalDelete))
+            foreach (var item in typeof(T).CreateFiles())
             {
-                TryAddFile(item, false);
+                if (item.LogicalDelete)
+                {
+                    TryAddFile(item, true);
+                }
             }
             sqlWhereBuilder.And(where);
             return this;
@@ -92,25 +99,24 @@ namespace Yxl.Dapper.Extensions
         {
 
             if (entity == null) throw new ArgumentNullException("Entity Model Is Null");
-            foreach (var item in typeof(T).CreateFiles())
+            foreach (var item in _allFiled)
             {
                 if (item.IgnoreUpdate) continue;
                 if (item.Key)
                 {
-                    sqlWhereBuilder = sqlWhereBuilder.Eq(item, item.MetaData.GetValue(entity));
+                    sqlWhereBuilder.Eq(item, item.MetaData.GetValue(entity));
                     continue;
                 }
                 if (item.LogicalDelete)
                 {
                     TryAddFile(item, false);
                 }
-
             }
             return this;
         }
         internal SqlUpdateBuilder<T> LogicalDeleteById(object id)
         {
-            foreach (var item in typeof(T).CreateFiles())
+            foreach (var item in _allFiled)
             {
                 if (item.IgnoreUpdate) continue;
                 if (item.Key)
@@ -128,12 +134,15 @@ namespace Yxl.Dapper.Extensions
 
         private bool TryAddFile(IFiled file, object val)
         {
-            if (_updateFiled.Exists(a => a.Filed.Name.Equals(file.Name)))
+            IUpdateFiled updateFile = _updateFiled.FirstOrDefault(a => a.Filed.Name.Equals(file.Name));
+            if (updateFile != null)
             {
-                return false;
+                _updateFiled.Remove(updateFile);
             }
             _updateFiled.Add(new UpdateFiled(file, val));
             return true;
         }
+
+
     }
 }

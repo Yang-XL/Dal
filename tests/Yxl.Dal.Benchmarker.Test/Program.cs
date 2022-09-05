@@ -1,19 +1,19 @@
 ﻿using BenchmarkDotNet.Running;
-using System;
-using Yxl.Dal.Benchmarker.Test;
 
-namespace MyApp // Note: actual namespace depends on the project name.
+namespace Yxl.Dal.Benchmarker.Test // Note: actual namespace depends on the project name.
 {
     internal class Program
     {
         static void Main(string[] args)
         {
-            //Console.WriteLine("Being");
-            //var summary = BenchmarkRunner.Run<SqlWhereBuilderTest>();
-            //Console.WriteLine("Press Enter Exit");
+            Console.WriteLine("SqlWhereBuilder BenchmarkRunner");
+            BenchmarkRunner.Run<SqlWhereBuilderTest>();
 
 
-            var summary2 = BenchmarkRunner.Run<SqlDeleteBuilderTest>();
+            Console.WriteLine("SqlDeleteBuilder BenchmarkRunner");
+            BenchmarkRunner.Run<SqlDeleteBuilderTest>();
+
+            Console.WriteLine("Press Enter Exit");
             Console.ReadLine();
         }
     }

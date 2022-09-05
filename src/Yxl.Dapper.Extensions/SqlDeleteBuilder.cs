@@ -9,6 +9,17 @@ using Yxl.Dapper.Extensions.Uitls;
 
 namespace Yxl.Dapper.Extensions
 {
+
+    public interface ISqlDeleteBuilder<T>
+    {
+        ISqlDeleteBuilder<T> Where(Action<SqlWhereBuilder<T>> where);
+
+        ISqlDeleteBuilder<T> DeleteById(T entity);
+
+        ISqlDeleteBuilder<T> DeleteById(object id);
+    }
+
+
     public class SqlDeleteBuilder<T> : ISqlBuilder
     {
         private readonly SqlWhereBuilder<T> sqlWhereBuilder;
